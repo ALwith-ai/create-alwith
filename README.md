@@ -7,12 +7,14 @@ Generate a standalone ALwith WorkBuddy with a Tauri desktop shell and editable s
 ## Usage after the first npm release
 
 ```sh
-bun create alwith --directory ./my-buddy --name my-buddy --product-name 'My Buddy' --identifier com.example.buddy
+bun create alwith ./my-buddy --name my-buddy --product-name 'My Buddy' --identifier com.example.buddy --preset chat --yes
 cd my-buddy
 bun install
 bun run app-config
 bun run dev:tauri
 ```
+
+Without `--yes`, an interactive terminal prompts for missing fields. Agent and U callers use `--yes --json`: stdout contains newline-delimited progress events followed by one structured result. Errors carry stable codes (`INVALID_INPUT`, `DIRECTORY_EXISTS`, `CANCELLED`, `SNAPSHOT_INVALID`, `GENERATION_FAILED`). Cancellation removes the newly generated directory; an existing directory is never overwritten. Retry a cancelled generation with the same command.
 
 Expansion is offline. The shell and frozen registry blocks become files in your project. Edit or replace whole pages. `alwith.app.json` is the single brand configuration; `bun run app-config` regenerates configuration and icons without overwriting pages.
 

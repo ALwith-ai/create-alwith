@@ -39,7 +39,7 @@ export async function configureProject(root: string, options: {icons?: boolean} 
   let cargo = await readFile(join(root, "src-tauri/Cargo.toml"), "utf8");
   cargo = cargo.replace(/(\[package\]\s*\nname = )[^\n]+/, `$1${JSON.stringify(c.name)}`)
     .replace(/(\[package\][\s\S]*?\nversion = )[^\n]+/, `$1${JSON.stringify(c.version)}`)
-    .replace(/(\[\[bin\]\]\s*\nname = )[^\n]+/, `$1${JSON.stringify(c.productName)}`);
+    .replace(/(\[\[bin\]\]\s*\nname = )[^\n]+/, `$1${JSON.stringify(c.name)}`);
   await writeFile(join(root, "src-tauri/Cargo.toml"), cargo);
   await writeFile(join(root, "index.html"), `<!doctype html>\n<html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>${html(c.productName)}</title></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>\n`);
   const iconName = `app-icon${extname(c.icon)}`;
@@ -47,7 +47,7 @@ export async function configureProject(root: string, options: {icons?: boolean} 
   await copyFile(safePath(root, c.icon), join(root, "public", iconName));
   await mkdir(join(root, "src/generated"), {recursive: true});
   await writeFile(join(root, "src/generated/app-icon.ts"), `// Generated from alwith.app.json.\nexport default ${JSON.stringify('/'+iconName)};\n`);
-  const config = {$schema: "https://schema.tauri.app/config/3.0.0-alpha.3", productName: c.productName, mainBinaryName: c.productName, version: c.version, identifier: c.identifier,
+  const config = {$schema: "https://schema.tauri.app/config/3.0.0-alpha.3", productName: c.productName, mainBinaryName: c.name, version: c.version, identifier: c.identifier,
     build: {frontendDist: "../dist", devUrl: "http://localhost:1420", beforeDevCommand: "bun run stage && bun run dev", beforeBuildCommand: "bun run stage && bun run build"},
     app: {windows: [desktopWindow(c)], security: {csp: null}},
     bundle: {active: true, category: "Productivity", targets: ["app", "dmg"], externalBin: ["binaries/alwith-runtime", "binaries/bun", "binaries/codex", "binaries/codex-code-mode-host"], resources: {"resources/adapter": "adapter", "resources/native": "native", "resources/licenses": "licenses"}, icon: ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"], macOS: {minimumSystemVersion: "26.0", entitlements: "./Entitlements.plist"}}};
