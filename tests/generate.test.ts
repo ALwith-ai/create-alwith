@@ -75,3 +75,15 @@ test("CLI returns structured progress and result, then safely refuses the same d
   expect(second.exitCode).toBe(1);
   expect(second.events.at(-1)).toMatchObject({type: "result", ok: false, error: {code: "DIRECTORY_EXISTS"}});
 });
+
+test("the same input produces the same ownership and recovery baseline", async () => {
+  const a = await destination(), b = await destination();
+  await generateProject({...options, directory: a});
+  await generateProject({...options, directory: b});
+  const first = await readFile(join(a, ".alwith/template.json"), "utf8");
+  expect(first).toBe(await readFile(join(b, ".alwith/template.json"), "utf8"));
+  const baseline = JSON.parse(first);
+  expect(baseline.files.find((f: any) => f.path === "src/App.tsx")).toMatchObject({owner: "user", source: "registry/chat"});
+  expect(baseline.files.find((f: any) => f.path === "src-tauri/tauri.conf.json")).toMatchObject({owner: "generator", source: "alwith.app.json"});
+  expect(baseline.files.every((f: any) => /^[a-f0-9]{64}$/.test(f.sha256))).toBe(true);
+});

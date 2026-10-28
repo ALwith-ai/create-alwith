@@ -20,7 +20,7 @@
     "@alwith/api": "^0.5.4",
     "@alwith/module-auth": "^0.5.5",
     "@alwith/module-chat": "^0.5.7",
-    "@alwith/module-store": "^0.1.3",
+    "@alwith/module-store": "^0.5.0",
     "@alwith/native-auth": "^0.1.2",
     "@alwith/native-kit": "^0.1.1",
     "@alwith/runtime": "^0.1.21",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@nyssance/codex-acp-v2": "^0.7.43",
-    "@openai/codex": "0.164.0",
+    "@openai/codex": "0.165.0",
     "@tauri-apps/cli": "3.0.0-alpha.5",
     "@types/bun": "1.4.4",
     "@types/react": "19.3.0",
@@ -60,7 +60,7 @@
     "create-alwith": "^0.1.0"
   },
   "optionalDependencies": {
-    "@openai/codex-darwin-arm64": "npm:@openai/codex@0.164.0-darwin-arm64",
+    "@openai/codex-darwin-arm64": "npm:@openai/codex@0.165.0-darwin-arm64",
     "@oven/bun-darwin-aarch64": "1.4.4"
   }
 }
