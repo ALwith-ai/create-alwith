@@ -56,8 +56,7 @@
     "@vitejs/plugin-react": "6.1.2",
     "shadcn": "^4.22.1",
     "typescript": "7.0.2",
-    "vite": "8.3.5",
-    "create-alwith": "^0.1.0"
+    "vite": "8.3.5"
   },
   "optionalDependencies": {
     "@openai/codex-darwin-arm64": "npm:@openai/codex@0.165.0-darwin-arm64",
