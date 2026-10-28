@@ -1,0 +1,46 @@
+{
+  "name": "create-alwith",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "create-alwith": "src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/generate.ts",
+    "./config": "./src/config.ts"
+  },
+  "files": [
+    "src",
+    "template",
+    "registry/built",
+    "alwith.app.schema.json",
+    "README.md",
+    "LICENSE",
+    "LICENSES",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "bun": ">=1.4.4"
+  },
+  "scripts": {
+    "test": "bun test",
+    "build:registry": "bun scripts/build-registry.ts",
+    "check:source": "bun scripts/check-source.ts"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@alwith/module-desktop-shell": "^0.5.0"
+  },
+  "license": "AGPL-3.0-only",
+  "description": "Generate a standalone ALwith WorkBuddy with editable page blocks.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALwith-ai/create-alwith.git"
+  },
+  "homepage": "https://github.com/ALwith-ai/create-alwith#readme",
+  "bugs": {
+    "url": "https://github.com/ALwith-ai/create-alwith/issues"
+  }
+}

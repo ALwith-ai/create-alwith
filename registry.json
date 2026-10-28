@@ -1,0 +1,82 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "alwith",
+  "homepage": "https://alwith.dev",
+  "items": [
+    {
+      "name": "login",
+      "type": "registry:block",
+      "title": "Login",
+      "files": [
+        {
+          "path": "registry/source/src/auth/auth-gate.tsx",
+          "type": "registry:file",
+          "target": "src/auth/auth-gate.tsx"
+        },
+        {
+          "path": "registry/source/src/auth/store.ts",
+          "type": "registry:file",
+          "target": "src/auth/store.ts"
+        }
+      ]
+    },
+    {
+      "name": "chat",
+      "type": "registry:block",
+      "title": "Chat",
+      "files": [
+        {
+          "path": "registry/source/src/App.tsx",
+          "type": "registry:file",
+          "target": "src/App.tsx"
+        },
+        {
+          "path": "registry/source/src/chat-host.tsx",
+          "type": "registry:file",
+          "target": "src/chat-host.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:block",
+      "title": "Sidebar",
+      "files": [
+        {
+          "path": "registry/source/src/layout/navigation.tsx",
+          "type": "registry:file",
+          "target": "src/layout/navigation.tsx"
+        }
+      ]
+    },
+    {
+      "name": "shell",
+      "type": "registry:block",
+      "title": "Shell",
+      "files": [
+        {
+          "path": "registry/source/src/layout/shell.tsx",
+          "type": "registry:file",
+          "target": "src/layout/shell.tsx"
+        },
+        {
+          "path": "registry/source/src/layout/leading.tsx",
+          "type": "registry:file",
+          "target": "src/layout/leading.tsx"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "type": "registry:block",
+      "title": "Settings",
+      "files": [
+        {
+          "path": "registry/source/src/settings/page.tsx",
+          "type": "registry:file",
+          "target": "src/settings/page.tsx"
+        }
+      ]
+    }
+  ]
+}
