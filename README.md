@@ -24,6 +24,13 @@ Expansion is offline. The shell and frozen registry blocks become files in your 
 
 Runtime manages agents. Codex ACP owns project context and conversations; API supplies shared Runtime transport. The default shell provides transparency, native menus and Atlas integration. This first acceptance target is macOS; Windows verification is deferred.
 
+## Generated project commands
+
+The generated project includes `fabfile.py` and `requirements-dev.txt`. After installing
+its Bun dependencies, run `python3 -m pip install -r requirements-dev.txt` to enable
+`fab dev` (alias `fab tauri`), `fab check`, and `fab build`. Fabric wraps the existing
+Bun/Tauri workflow and is optional; each generated project includes its own README.
+
 ## Development
 
 Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun test` exercise offline project generation.
