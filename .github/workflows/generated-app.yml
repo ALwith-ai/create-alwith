@@ -1,0 +1,77 @@
+name: Generated macOS apps
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'template/**', 'registry/**', 'tests/**', 'package.json', 'bun.lock', '.github/workflows/generated-app.yml']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: amber-buddy
+            product: Amber Buddy
+            identifier: com.example.amberbuddy
+          - name: violet-buddy
+            product: Violet Buddy
+            identifier: com.example.violetbuddy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: bun install --frozen-lockfile
+      - run: bun test
+      - name: Generate a distinct application
+        env:
+          APP_NAME: ${{ matrix.name }}
+          APP_PRODUCT: ${{ matrix.product }}
+          APP_IDENTIFIER: ${{ matrix.identifier }}
+        run: bun src/cli.ts generated --name "$APP_NAME" --product-name "$APP_PRODUCT" --identifier "$APP_IDENTIFIER" --yes --json
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: generated/src-tauri -> target
+          key: generated-macos
+      - name: Install frozen public dependencies
+        working-directory: generated
+        run: bun install --frozen-lockfile
+      - name: Configure, check and build
+        working-directory: generated
+        run: |
+          bun run app-config
+          bun run check
+          bun run check:independence
+          bun run stage
+          bun tauri build --bundles app -- --locked
+      - name: Verify brand and package for download
+        working-directory: generated
+        env:
+          APP_NAME: ${{ matrix.name }}
+          APP_PRODUCT: ${{ matrix.product }}
+          APP_IDENTIFIER: ${{ matrix.identifier }}
+        run: |
+          python3 - <<'PY'
+          import os, plistlib
+          from pathlib import Path
+          app = Path('src-tauri/target/release/bundle/macos') / (os.environ['APP_PRODUCT'] + '.app')
+          with (app / 'Contents/Info.plist').open('rb') as f:
+              info = plistlib.load(f)
+          assert info['CFBundleIdentifier'] == os.environ['APP_IDENTIFIER']
+          assert info['CFBundleExecutable'] == os.environ['APP_NAME']
+          PY
+          codesign --force --sign - --entitlements src-tauri/Entitlements.plist "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app"
+          codesign --verify --deep --strict "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app"
+          ditto -c -k --sequesterRsrc --keepParent "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app" "$APP_NAME-macos-arm64.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-macos-arm64
+          path: generated/*-macos-arm64.zip
+          if-no-files-found: error
+          retention-days: 7

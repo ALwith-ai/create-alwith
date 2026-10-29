@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, relative } from "node:path";
 import { createHash } from "node:crypto";
 import { configureProject, safePath, validateConfig, type AppConfig } from "./config";
+import { configureLockfiles } from "./lockfiles";
 import { GenerateError, generationError } from "./errors";
 export { GenerateError, type GenerateErrorCode } from "./errors";
 
@@ -56,7 +57,9 @@ export async function generateProject(options: GenerateOptions): Promise<string>
     }
     await writeFile(join(output, "alwith.app.json"), JSON.stringify({$schema: "./alwith.app.schema.json", ...config}, null, 2)+"\n");
     progress("configure");
+    const templateManifest = JSON.parse(await readFile(join(output, "package.json"), "utf8"));
     await configureProject(output, {icons: false});
+    await configureLockfiles(output, templateManifest.name, config.name, config.version);
     const files: Array<{path: string; owner: "generator" | "user"; source: string; sha256: string}> = [];
     async function record(directory: string): Promise<void> {
       for (const entry of (await readdir(directory, {withFileTypes: true})).sort((a, b) => a.name < b.name ? -1 : 1)) {
