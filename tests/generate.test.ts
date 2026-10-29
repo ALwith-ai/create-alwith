@@ -2,7 +2,7 @@ import { afterEach, expect, test } from "bun:test";
 import { mkdtemp, readFile, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { generateProject } from "../src/generate";
+import { generateProject, generateProjectWithResult } from "../src/generate";
 import { configureProject, safePath } from "../src/config";
 const roots: string[] = [];
 const options = {
@@ -288,4 +288,55 @@ test("rejects invalid account modes before creating output", async () => {
     generateProject({ ...options, directory, auth: "unknown" as never }),
   ).rejects.toMatchObject({ code: "INVALID_INPUT" });
   expect(await Bun.file(join(directory, "package.json")).exists()).toBe(false);
+});
+
+test("updates write a key pair outside the project and configure the GitHub release endpoint", async () => {
+  const directory = await destination();
+  const keyDirectory = join(await destination(), "keys");
+  const result = await generateProjectWithResult({
+    ...options,
+    directory,
+    updates: { github: "example/my-buddy", keyPassword: "pw", keyDirectory },
+  });
+  expect(result.updates).toEqual({ github: "example/my-buddy", privateKey: join(keyDirectory, "my-buddy.key") });
+  const config = JSON.parse(await readFile(join(directory, "alwith.app.json"), "utf8"));
+  expect(config.updates.github).toBe("example/my-buddy");
+  expect(config.updates.pubkey).toBe(await readFile(join(keyDirectory, "my-buddy.key.pub"), "utf8"));
+  expect(Buffer.from(config.updates.pubkey, "base64").toString()).toStartWith("untrusted comment: minisign public key: ");
+  const privateKey = await readFile(join(keyDirectory, "my-buddy.key"), "utf8");
+  expect(privateKey).toMatch(/^[A-Za-z0-9+/]+=*$/);
+  const tree = await Bun.$`grep -rl ${privateKey} ${directory}`.nothrow().text();
+  expect(tree).toBe("");
+  const tauri = JSON.parse(await readFile(join(directory, "src-tauri/tauri.conf.json"), "utf8"));
+  expect(tauri.plugins.updater).toEqual({
+    pubkey: config.updates.pubkey,
+    endpoints: ["https://github.com/example/my-buddy/releases/latest/download/latest.json"],
+    requireSignedVersion: true,
+  });
+  expect(tauri.bundle.createUpdaterArtifacts).toBe(true);
+  expect(await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8")).toContain("tauri_plugin_updater::Builder::new().build()");
+  expect(await readFile(join(directory, ".github/workflows/release.yml"), "utf8")).toContain("release-manifest.ts collect");
+  expect(await readFile(join(directory, "src/settings/updates.tsx"), "utf8")).toContain("checkForUpdates");
+  expect(JSON.parse(await readFile(join(directory, ".alwith/template.json"), "utf8")).updates).toEqual({ github: "example/my-buddy" });
+  // An existing key is never overwritten, and nothing is generated when the input is refused.
+  const again = join(await destination(), "again");
+  await expect(generateProjectWithResult({ ...options, directory: again, updates: { github: "example/my-buddy", keyDirectory } })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+  expect(await Bun.file(join(again, "package.json")).exists()).toBe(false);
+  expect(await readFile(join(keyDirectory, "my-buddy.key"), "utf8")).toBe(privateKey);
+  await expect(generateProjectWithResult({ ...options, directory: again, updates: { github: "not a repo", keyDirectory } })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+  // Reusing a public key writes no key file.
+  const reuse = await generateProjectWithResult({ ...options, name: "reuse-buddy", directory: again, updates: { github: "example/my-buddy", pubkey: config.updates.pubkey, keyDirectory } });
+  expect(reuse.updates).toEqual({ github: "example/my-buddy" });
+  expect(await Bun.file(join(keyDirectory, "reuse-buddy.key")).exists()).toBe(false);
+  expect(JSON.parse(await readFile(join(again, "alwith.app.json"), "utf8")).updates.pubkey).toBe(config.updates.pubkey);
+});
+
+test("without updates the generated app has no updater configuration", async () => {
+  const directory = await destination();
+  await generateProject({ ...options, directory });
+  const tauri = JSON.parse(await readFile(join(directory, "src-tauri/tauri.conf.json"), "utf8"));
+  expect(tauri.plugins).toBeUndefined();
+  expect(tauri.bundle.createUpdaterArtifacts).toBeUndefined();
+  expect(JSON.parse(await readFile(join(directory, "alwith.app.json"), "utf8")).updates).toBeUndefined();
+  expect(await readFile(join(directory, "src/settings/page.tsx"), "utf8")).toContain('"updates" in app && <UpdatesRow />');
 });

@@ -77,6 +77,26 @@
     },
     "template": {
       "type": "object"
+    },
+    "updates": {
+      "type": "object",
+      "description": "Signed auto update through the app's own GitHub Releases: the updater reads https://github.com/<github>/releases/latest/download/latest.json.",
+      "required": [
+        "github",
+        "pubkey"
+      ],
+      "properties": {
+        "github": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9_.-]{1,100}$",
+          "description": "owner/repo on github.com"
+        },
+        "pubkey": {
+          "type": "string",
+          "minLength": 64,
+          "description": "Tauri updater public key (contents of the .key.pub file); the private key stays outside the project"
+        }
+      }
     }
   }
 }

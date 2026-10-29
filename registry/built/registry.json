@@ -80,6 +80,11 @@
           "path": "registry/source/src/settings/page.tsx",
           "type": "registry:file",
           "target": "src/settings/page.tsx"
+        },
+        {
+          "path": "registry/source/src/settings/updates.tsx",
+          "type": "registry:file",
+          "target": "src/settings/updates.tsx"
         }
       ]
     }

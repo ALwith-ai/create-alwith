@@ -16,6 +16,8 @@ bun run app-config
 bun run dev:tauri
 ```
 
+Add `--github owner/repo` for signed auto update through that repository's GitHub Releases: the generator creates a Tauri updater key pair, writes the private key to `~/.tauri/<name>.key` (never into the project; `--key-password` protects it, `--pubkey` reuses an existing public key instead) and records the repository and public key under `updates` in `alwith.app.json`. The generated `.github/workflows/release.yml` publishes a release of that repository from every `v<version>` tag; the generated README lists the secrets it needs.
+
 Choose `--auth alwith` for ALwith account integration, or `--auth none` for bare chat without ALwith login and its native dependencies. Model provider authentication is separate in both modes. The choice is recorded by `modules` in `alwith.app.json`; account integration is a generation choice, not a runtime login bypass.
 
 Without `--yes`, an interactive terminal prompts for missing fields. Agent and U callers use `--yes --json`: stdout contains newline-delimited progress events followed by one structured result. Errors carry stable codes (`INVALID_INPUT`, `DIRECTORY_EXISTS`, `CANCELLED`, `SNAPSHOT_INVALID`, `GENERATION_FAILED`). Cancellation removes the newly generated directory; an existing directory is never overwritten.

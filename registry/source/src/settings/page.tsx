@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { logoutPlatform, usePlatformAuth } from "../auth/store"
+import { UpdatesRow } from "./updates"
 import app from "../../alwith.app.json"
 
 /** Default settings page; application authors may replace this whole component. */
@@ -35,6 +36,7 @@ export function SettingsPage({onClose}: {onClose: () => void}) {
         </Tabs>
       </div>
       <div className="flex items-center justify-between gap-4"><h2 className="text-sm font-medium">{zh ? "外观" : "Appearance"}</h2><span className="text-sm text-muted-foreground">{zh ? "跟随系统" : "System appearance"}</span></div>
+      {"updates" in app && <UpdatesRow />}
       {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
     </div>
   </section>
