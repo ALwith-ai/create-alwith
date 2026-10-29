@@ -18,12 +18,12 @@
   "dependencies": {
     "@agentclientprotocol/sdk": "2.0.2",
     "@alwith/api": "^0.5.4",
-    "@alwith/module-auth": "^0.5.5",
-    "@alwith/module-chat": "^0.5.9",
+    "@alwith/module-auth": "^0.5.7",
+    "@alwith/module-chat": "^0.5.11",
     "@alwith/module-store": "^0.5.0",
     "@alwith/native-auth": "^0.1.2",
     "@alwith/native-kit": "^0.1.1",
-    "@alwith/runtime": "^0.1.21",
+    "@alwith/runtime": "^0.1.22",
     "@base-ui/react": "1.9.0",
     "@fontsource-variable/inter": "5.3.0",
     "@nyssance/atlas": "^0.1.3",
@@ -44,7 +44,7 @@
     "tailwindcss": "4.3.3",
     "tw-animate-css": "1.4.0",
     "zustand": "5.0.16",
-    "@alwith/module-desktop-shell": "^0.5.0"
+    "@alwith/module-desktop-shell": "^0.5.1"
   },
   "devDependencies": {
     "@nyssance/codex-acp-v2": "^0.7.43",
