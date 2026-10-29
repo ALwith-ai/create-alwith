@@ -2,9 +2,9 @@
 
 Generate a standalone ALwith WorkBuddy with a Tauri desktop shell and editable shadcn page blocks. Source repository: [ALwith-ai/create-alwith](https://github.com/ALwith-ai/create-alwith).
 
-**Development preview. No npm release yet.** The template targets the forthcoming coordinated platform release. Some dependencies are not yet available from npm; a fresh installation is not ready. Published dependency locks and independent native installation verification are release prerequisites.
+The template uses published npm dependencies and includes verified Bun and Cargo lockfiles. The first supported installation target is macOS on Apple silicon.
 
-## Usage after the first npm release
+## Usage
 
 ```sh
 bun create alwith ./my-buddy --name my-buddy --product-name 'My Buddy' --identifier com.example.buddy --preset chat --yes
@@ -22,11 +22,11 @@ Runtime manages agents. Codex ACP owns project context and conversations; API su
 
 ## Development
 
-Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. Once the platform packages are published, `bun install` and `bun test` exercise offline project generation.
+Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun test` exercise offline project generation.
 
 `registry.json` defines the default login, chat, sidebar, shell and settings blocks. `bun run build:registry` uses shadcn 4.22.1 and records SHA-256 hashes. The generator uses those same immutable snapshots. Upgrade or replace pages through the standard shadcn workflow.
 
-Release only after the public dependency set, generator and template lockfiles, and generated native application have been verified. npm publication runs in GitHub Actions using trusted publishing; local tarball overrides never enter a release.
+Release only after the public dependency set, generator and template lockfiles, and generated native application have been verified. The release workflow supports GitHub Actions trusted publishing after the package is configured on npm; local tarball overrides never enter a release.
 
 ## License
 
