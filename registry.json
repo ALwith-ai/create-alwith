@@ -17,6 +17,11 @@
           "path": "registry/source/src/auth/store.ts",
           "type": "registry:file",
           "target": "src/auth/store.ts"
+        },
+        {
+          "path": "registry/source/src/auth/pets.ts",
+          "type": "registry:file",
+          "target": "src/auth/pets.ts"
         }
       ]
     },

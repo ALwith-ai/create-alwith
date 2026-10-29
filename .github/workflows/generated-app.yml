@@ -2,7 +2,7 @@ name: Generated macOS apps
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'template/**', 'registry/**', 'tests/**', 'package.json', 'bun.lock', '.github/workflows/generated-app.yml']
+    paths: ['src/**', 'locks/**', 'template/**', 'registry/**', 'tests/**', 'package.json', 'bun.lock', '.github/workflows/generated-app.yml']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -18,9 +18,11 @@ jobs:
           - name: amber-buddy
             product: Amber Buddy
             identifier: com.example.amberbuddy
+            auth: alwith
           - name: violet-buddy
             product: Violet Buddy
             identifier: com.example.violetbuddy
+            auth: none
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -34,7 +36,8 @@ jobs:
           APP_NAME: ${{ matrix.name }}
           APP_PRODUCT: ${{ matrix.product }}
           APP_IDENTIFIER: ${{ matrix.identifier }}
-        run: bun src/cli.ts generated --name "$APP_NAME" --product-name "$APP_PRODUCT" --identifier "$APP_IDENTIFIER" --yes --json
+          APP_AUTH: ${{ matrix.auth }}
+        run: bun src/cli.ts generated --name "$APP_NAME" --product-name "$APP_PRODUCT" --identifier "$APP_IDENTIFIER" --auth "$APP_AUTH" --yes --json
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: generated/src-tauri -> target

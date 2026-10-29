@@ -27,7 +27,7 @@ pub struct RuntimeState {
 }
 
 impl RuntimeState {
-    fn current(&self) -> Result<Arc<RuntimeClient>, String> {
+    pub fn current(&self) -> Result<Arc<RuntimeClient>, String> {
         let client = self.client.lock().unwrap().clone().ok_or("alwith-runtime is not running")?;
         if let Some(reason) = client.closed() {
             return Err(reason);

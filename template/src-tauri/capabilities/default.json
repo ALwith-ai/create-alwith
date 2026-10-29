@@ -3,7 +3,9 @@
   "identifier": "default",
   "description": "Main window: Runtime relay, logs, opening links, ALwith platform requests and the named store",
   "windows": [
-    "main"
+    "main",
+    "vibemon",
+    "bubble-menu-vibemon"
   ],
   "permissions": [
     "core:default",
@@ -23,6 +25,7 @@
       ]
     },
     "alwith-module-store:default",
-    "alwith-auth-client:default"
+    "alwith-auth-client:default",
+    "alwith-auth-client:pets"
   ]
 }

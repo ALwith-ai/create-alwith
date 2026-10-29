@@ -7,7 +7,7 @@ import {
   type SessionSummary,
   useSessionListExpansion
 } from "@alwith/module-chat/session-list"
-import { LogOutIcon, MessageSquarePlusIcon, SettingsIcon } from "lucide-react"
+import { PawPrintIcon, LogOutIcon, MessageSquarePlusIcon, SettingsIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -17,10 +17,12 @@ import { logoutPlatform, usePlatformAuth } from "../auth/store"
 import { useClient } from "../client"
 
 /** The persistent Atlas navigation column: brand, new chat, module-chat's session list, settings. */
-export function Navigation({ selectedId, onNew, onSelect, onSettings }: {
+export function Navigation({ selectedId, onNew, onSelect, onSettings, onPets, petsReady }: {
   selectedId: string | null
   onNew: () => void
   onSelect: (row: SessionSummary) => void
+  onPets: () => void
+  petsReady: boolean
   onSettings: () => void
 }) {
   const { t } = useTranslation()
@@ -50,6 +52,7 @@ export function Navigation({ selectedId, onNew, onSelect, onSettings }: {
           <MessageSquarePlusIcon />
           {t("newChat")}
         </Button>
+        <Button variant="ghost" size="icon" disabled={!petsReady} onClick={onPets} aria-label={t("pets")}><PawPrintIcon /></Button>
         <SessionStateMenu
           sessions={Object.values(runStates).filter((record) => !record.reusableDraft)}
           t={t}

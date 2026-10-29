@@ -1,3 +1,5 @@
+import {PetCenter, PetLounge} from "@alwith/module-auth/pets/react"
+import {initializeVibemonMain, updateMainPetSurface, requestPet} from "./auth/pets"
 import { SettingsPage } from "./settings/page"
 import app from "../alwith.app.json"
 import { onDesktopNewChat } from "@alwith/module-desktop-shell/native"
@@ -52,6 +54,8 @@ export function App() {
   const { t } = useTranslation()
   const connection = useClient((state) => state.connection)
   const connectionError = useClient((state) => state.connectionError)
+  const [pets, setPets] = useState(false)
+  const [petsReady, setPetsReady] = useState(false)
   const [settings, setSettings] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -62,6 +66,7 @@ export function App() {
     sessionStorage.setItem(SESSION_KEY, id)
     setSelected(id)
     setSettings(false)
+    setPets(false)
     setError(null)
   }, [])
   const report = (caught: unknown) => setError(caught instanceof Error ? caught.message : String(caught))
@@ -81,6 +86,28 @@ export function App() {
       cancelled = true
     }
   }, [show])
+
+  useEffect(() => {
+    let active = true
+    const onOpen = (event: Event) => {
+      const id = (event as CustomEvent<string | null>).detail
+      if (id === null) void newChat()
+      else {
+        const row = client.state.sessionList.find(row => row.sessionId === id)
+        if (row) void select(row)
+        else if (client.state.sessions[id]) show(id)
+        else report(new Error("Conversation unavailable"))
+      }
+    }
+    const onError = (event: Event) => report((event as CustomEvent).detail)
+    window.addEventListener("pet:open-chat", onOpen)
+    window.addEventListener("pet:error", onError)
+    void initializeVibemonMain().then(() => { if (active) setPetsReady(true) }).catch(report)
+    return () => { active = false; window.removeEventListener("pet:open-chat", onOpen); window.removeEventListener("pet:error", onError) }
+  }, [show])
+  useEffect(() => {
+    if (petsReady) void updateMainPetSurface(selected, !pets && !settings).catch(report)
+  }, [petsReady, selected, pets, settings])
 
   async function newChat() {
     try {
@@ -122,14 +149,15 @@ export function App() {
     <SessionListProvider host={host} client={client}>
       <Shell
         leading={<Leading />}
-        navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onSelect={(row) => void select(row)} onSettings={() => setSettings(true)} />}
+        navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onSelect={(row) => void select(row)} onSettings={() => { setPets(false); setSettings(true) }} onPets={() => {setSettings(false); setPets(true)}} petsReady={petsReady} />}
       >
-        {settings ? <SettingsPage onClose={() => setSettings(false)} /> : session ? (
+        {pets && petsReady ? <PetCenter /> : settings ? <SettingsPage onClose={() => setSettings(false)} /> : session ? (
           <ConversationView key={session.id} session={session} client={client} host={host} header={header} />
         ) : (
           header
         )}
       </Shell>
+      {petsReady && <PetLounge active={!pets} nest={{inlineEnd: 16, bottom: 16, size: 96}} onOpenCenter={() => setPets(true)} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
     </SessionListProvider>
   )
 }

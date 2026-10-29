@@ -2,19 +2,23 @@
 
 Generate a standalone ALwith WorkBuddy with a Tauri desktop shell and editable shadcn page blocks. Source repository: [ALwith-ai/create-alwith](https://github.com/ALwith-ai/create-alwith).
 
+Local development requires Bun, Rust and the platform native compiler (Xcode command line tools on macOS). Run the generated project on your own computer; certificate purchase, notarization and cloud builds are not part of creation.
+
 The template uses published npm dependencies and includes verified Bun and Cargo lockfiles. The first supported installation target is macOS on Apple silicon.
 
 ## Usage
 
 ```sh
-bun create alwith ./my-buddy --name my-buddy --product-name 'My Buddy' --identifier com.example.buddy --preset chat --yes
+bun create alwith ./my-buddy --name my-buddy --product-name 'My Buddy' --identifier com.example.buddy --preset chat --auth alwith --yes
 cd my-buddy
 bun install
 bun run app-config
 bun run dev:tauri
 ```
 
-Without `--yes`, an interactive terminal prompts for missing fields. Agent and U callers use `--yes --json`: stdout contains newline-delimited progress events followed by one structured result. Errors carry stable codes (`INVALID_INPUT`, `DIRECTORY_EXISTS`, `CANCELLED`, `SNAPSHOT_INVALID`, `GENERATION_FAILED`). Cancellation removes the newly generated directory; an existing directory is never overwritten. Retry a cancelled generation with the same command.
+Choose `--auth alwith` for ALwith account integration, or `--auth none` for bare chat without ALwith login and its native dependencies. Model provider authentication is separate in both modes. The choice is recorded by `modules` in `alwith.app.json`; account integration is a generation choice, not a runtime login bypass.
+
+Without `--yes`, an interactive terminal prompts for missing fields. Agent and U callers use `--yes --json`: stdout contains newline-delimited progress events followed by one structured result. Errors carry stable codes (`INVALID_INPUT`, `DIRECTORY_EXISTS`, `CANCELLED`, `SNAPSHOT_INVALID`, `GENERATION_FAILED`). Cancellation removes the newly generated directory; an existing directory is never overwritten.
 
 Expansion is offline. The shell and frozen registry blocks become files in your project. Edit or replace whole pages. `.alwith/template.json` records each file’s owner, source and initial content hash, plus configuration-owned fields; repeated generation with the same inputs produces the same baseline. `alwith.app.json` is the single brand configuration; `bun run app-config` regenerates configuration and icons without overwriting pages.
 
@@ -31,3 +35,21 @@ Release only after the public dependency set, generator and template lockfiles, 
 ## License
 
 AGPL-3.0-only. See LICENSE and THIRD_PARTY_NOTICES.md.
+
+## Validate unpublished package candidates
+
+Build and pack `@alwith/module-auth` and `@alwith/module-desktop-shell` locally,
+then validate their archives without publishing:
+
+```sh
+bun scripts/check-candidates.ts /absolute/path/auth.tgz /absolute/path/desktop-shell.tgz
+```
+
+The check creates both account-enabled and bare-chat projects in a temporary
+directory, installs the frozen dependencies from Bun's cache, and extracts the
+candidate archives into their isolated `node_modules`. It checks frontend and
+native compilation, independence, and unchanged production manifests and Bun
+locks. Populate the dependency cache before running it. Cargo also runs offline;
+`CARGO_TARGET_DIR` can select an existing local build cache. The printed temporary
+directory is retained for inspection. This check does not launch Runtime or use
+account credentials.

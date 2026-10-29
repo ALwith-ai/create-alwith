@@ -18,15 +18,25 @@ pub fn run() {
     let builder = builder.plugin(tauri_plugin_hasgard::init());
     builder
         .manage(runtime::RuntimeState::default())
+        .manage(alwith_auth_client::pets::RuntimeAccess(pet_owner))
         .invoke_handler(tauri::generate_handler![
             runtime::runtime_start,
             runtime::runtime_send
         ])
         .on_window_event(|window, event| {
-            if let tauri::WindowEvent::Destroyed = event {
+            if let tauri::WindowEvent::Destroyed = event && window.label() == "main" {
                 runtime::shutdown_blocking(window.app_handle());
             }
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn pet_owner(app: &tauri::AppHandle, session_id: String, owner: String) -> alwith_auth_client::pets::OwnerCheck {
+    let client = app.state::<runtime::RuntimeState>().current();
+    Box::pin(async move {
+        let states = client?.run_states().await.map_err(|error| error.to_string())?;
+        let matching: Vec<_> = states.iter().filter(|state| state.session_id == session_id).collect();
+        Ok(matching.len() == 1 && matching[0].owner_id == owner && matching[0].execution_id.is_none())
+    })
 }

@@ -20,7 +20,7 @@ import { openStore } from "../store"
 import { createAuthTransport } from "@alwith/module-auth/transport"
 import { assertActiveLogin } from "@alwith/module-auth"
 
-const API_BASE_URL = import.meta.env.DEV ? "https://api-dev.alwith.ai/service" : "https://api.alwith.ai/service"
+export const API_BASE_URL = import.meta.env.DEV ? "https://api-dev.alwith.ai/service" : "https://api.alwith.ai/service"
 const STATE_EVENT = "alwith-auth-state"
 const store = openStore(authStoreName(API_BASE_URL))
 const storage = createTokenStorage({
@@ -89,3 +89,5 @@ export async function initPlatformAuth(): Promise<void> {
   })
   usePlatformAuth.getState().init()
 }
+
+export const platformApiRequest = <T>(path: string, method: "GET" | "POST", body?: unknown) => transport.request<T>(path, method, body)

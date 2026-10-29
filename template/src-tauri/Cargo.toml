@@ -22,12 +22,12 @@ tauri-build = { version = "3.0.0-alpha.4", features = [] }
 tauri-plugin-alwith-desktop-shell = { path = "../node_modules/@alwith/module-desktop-shell/rust" }
 alwith-api = { path = "../node_modules/@alwith/api/rust" }
 alwith-module-store = { path = "../node_modules/@alwith/module-store/rust", features = ["tauri"] }
-alwith-auth-client = { path = "../node_modules/@alwith/module-auth/rust", features = ["tauri"] }
+alwith-auth-client = { path = "../node_modules/@alwith/module-auth/rust", features = ["pets"] }
 alwith-native-client = { path = "../node_modules/@alwith/native-kit/rust" }
 log = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri = { version = "3.0.0-alpha.5", features = [] }
+tauri = { version = "3.0.0-alpha.5", features = ["protocol-asset"] }
 tauri-plugin-http = "3.0.0-alpha.3"
 tauri-plugin-log = "3.0.0-alpha.3"
 tauri-plugin-os = "3.0.0-alpha.3"
