@@ -1750,7 +1750,7 @@ dependencies = [
  "js-sys",
  "log",
  "wasm-bindgen",
- "windows-core 0.62.2",
+ "windows-core 0.61.2",
 ]
 
 [[package]]
@@ -4051,13 +4051,15 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-alwith-desktop-shell"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "atlas-tauri",
  "log",
  "serde",
  "tauri",
  "tauri-plugin",
+ "tauri-plugin-updater",
+ "time",
 ]
 
 [[package]]

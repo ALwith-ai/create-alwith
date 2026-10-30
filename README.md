@@ -20,6 +20,14 @@ Add `--github owner/repo` for signed auto update through that repository's GitHu
 
 Choose `--auth alwith` for ALwith account integration, or `--auth none` for bare chat without ALwith login and its native dependencies. Model provider authentication is separate in both modes. The choice is recorded by `modules` in `alwith.app.json`; account integration is a generation choice, not a runtime login bypass.
 
+To recreate an existing brand in a new directory, use its configuration and icon:
+
+```sh
+bun src/cli.ts /tmp/my-buddy-check --config /path/to/alwith.app.json --yes
+```
+
+The generator preserves the brand, account choice, window, languages and public updater configuration. It copies the configured icon, never the existing application's source or installed dependencies. The destination must not exist. Use the normal generated project commands to build and run it independently.
+
 Without `--yes`, an interactive terminal prompts for missing fields. Agent and U callers use `--yes --json`: stdout contains newline-delimited progress events followed by one structured result. Errors carry stable codes (`INVALID_INPUT`, `DIRECTORY_EXISTS`, `CANCELLED`, `SNAPSHOT_INVALID`, `GENERATION_FAILED`). Cancellation removes the newly generated directory; an existing directory is never overwritten.
 
 Expansion is offline. The shell and frozen registry blocks become files in your project. Edit or replace whole pages. `.alwith/template.json` records each file’s owner, source and initial content hash, plus configuration-owned fields; repeated generation with the same inputs produces the same baseline. `alwith.app.json` is the single brand configuration; `bun run app-config` regenerates configuration and icons without overwriting pages.

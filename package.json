@@ -18,7 +18,8 @@
     "LICENSE",
     "LICENSES",
     "THIRD_PARTY_NOTICES.md",
-    "locks"
+    "locks",
+    "bun.lock"
   ],
   "engines": {
     "bun": ">=1.4.4"
@@ -32,7 +33,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@alwith/module-desktop-shell": "^0.5.1"
+    "@alwith/module-desktop-shell": "^0.5.3"
   },
   "license": "AGPL-3.0-only",
   "description": "Generate a standalone ALwith WorkBuddy with editable page blocks.",

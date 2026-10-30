@@ -34,9 +34,10 @@ function boot(): Promise<string> {
     await client.listSessions().catch((error: unknown) => console.warn("session list unavailable", error))
     const remembered = sessionStorage.getItem(SESSION_KEY)
     const row = remembered ? client.state.sessionList.find((item) => item.sessionId === remembered) : undefined
-    if (remembered && (row || client.state.runStates[remembered])) {
+    const cwd = remembered ? (row?.cwd ?? client.state.runStates[remembered]?.cwd) : undefined
+    if (remembered && cwd) {
       try {
-        await client.open(remembered, row?.cwd ?? client.state.runStates[remembered]?.cwd ?? ((await client.refreshProjectContext(true)).chatDirectory))
+        await client.open(remembered, cwd)
         return remembered
       } catch (error) {
         console.warn("reopening the remembered session failed, starting a new one", error)

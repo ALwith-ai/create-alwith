@@ -76,7 +76,7 @@ dependencies = [
 
 [[package]]
 name = "alwith-auth-client"
-version = "0.5.4"
+version = "0.5.5"
 dependencies = [
  "alwith-native-client",
  "base64 0.23.1",
@@ -1939,7 +1939,7 @@ dependencies = [
  "js-sys",
  "log",
  "wasm-bindgen",
- "windows-core 0.62.2",
+ "windows-core 0.61.2",
 ]
 
 [[package]]
@@ -4442,13 +4442,15 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-alwith-desktop-shell"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "atlas-tauri",
  "log",
  "serde",
  "tauri",
  "tauri-plugin",
+ "tauri-plugin-updater",
+ "time",
 ]
 
 [[package]]

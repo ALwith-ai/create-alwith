@@ -9,6 +9,8 @@ import { GenerateError, generationError } from "./errors";
 export { GenerateError, type GenerateErrorCode } from "./errors";
 export { generateUpdaterKeys, githubRepository, updaterKeyDirectory, writeUpdaterKeys, type UpdaterKeys } from "./updates";
 
+import { copyTemplate } from "./template";
+
 const packageRoot = resolve(import.meta.dirname, "..");
 export type GeneratePhase = "validate" | "template" | "registry" | "configure" | "complete";
 /** Auto update through the app's own GitHub Releases; a fresh signing key is written outside the project. */
@@ -25,6 +27,8 @@ export interface UpdateOptions {
 export interface GenerateOptions {
   directory: string; name: string; productName: string; identifier: string;
   auth?: AuthMode;
+  /** Recreate a brand from an existing alwith.app.json and its icon. */
+  configFile?: string;
   updates?: UpdateOptions;
   signal?: AbortSignal;
   onProgress?: (phase: GeneratePhase) => void;
@@ -53,7 +57,10 @@ export async function generateProjectWithResult(options: GenerateOptions): Promi
   let keys: {directory: string; pair: ReturnType<typeof generateUpdaterKeys>} | undefined;
   let updates: {github: string; pubkey: string} | undefined;
   try {
-    auth = authMode(options.auth ?? "alwith");
+    const saved = options.configFile ? validateConfig(JSON.parse(await readFile(options.configFile, "utf8"))) : undefined;
+    if (saved && options.updates) throw new Error("configFile already supplies update settings");
+    updates = saved?.updates;
+    auth = authMode(saved ? (saved.modules.includes("auth") ? "alwith" : "none") : options.auth ?? "alwith");
     if (options.updates) {
       const github = githubRepository(options.updates.github);
       if (options.updates.pubkey) updates = {github, pubkey: options.updates.pubkey.trim()};
@@ -65,6 +72,7 @@ export async function generateProjectWithResult(options: GenerateOptions): Promi
       }
     }
     config = validateConfig({name: options.name, productName: options.productName, identifier: options.identifier, version: "0.1.0", icon: "assets/icon.svg", languages: ["en", "zh-CN"], window: {width: 1200, height: 800, minWidth: 900, minHeight: 600}, preset: "chat", modules: auth === "alwith" ? ["chat", "auth", "store"] : ["chat", "store"], ...(updates ? {updates} : {}), template: {name: "create-alwith", version: manifest.version}});
+    if (saved) config = validateConfig({...saved, template: {name: "create-alwith", version: manifest.version}});
     if (!options.directory) throw new Error("An output directory is required");
   } catch (error) {
     throw new GenerateError("INVALID_INPUT", error instanceof Error ? error.message : String(error), {cause: error});
@@ -80,7 +88,13 @@ export async function generateProjectWithResult(options: GenerateOptions): Promi
   }
   try {
     progress("template");
-    await cp(join(packageRoot, "template"), output, {recursive: true});
+    await copyTemplate(join(packageRoot, "template"), output);
+    if (options.configFile) {
+      const icon = safePath(dirname(resolve(options.configFile)), config.icon);
+      const target = safePath(output, config.icon);
+      await mkdir(dirname(target), {recursive: true});
+      await cp(icon, target);
+    }
     await cp(join(packageRoot, "alwith.app.schema.json"), join(output, "alwith.app.schema.json"));
     const registry = JSON.parse(await readFile(join(packageRoot, "registry/built/manifest.json"), "utf8")) as {items: Array<{name: string; sha256: string}>};
     if (auth === "none") registry.items = registry.items.filter(item => item.name !== "login");

@@ -5,12 +5,12 @@
     "": {
       "name": "create-alwith",
       "dependencies": {
-        "@alwith/module-desktop-shell": "^0.5.1",
+        "@alwith/module-desktop-shell": "^0.5.3",
       },
     },
   },
   "packages": {
-    "@alwith/module-desktop-shell": ["@alwith/module-desktop-shell@0.5.1", "", { "peerDependencies": { "@nyssance/atlas": "^0.1.3", "@tauri-apps/api": "^3.0.0-alpha.3" }, "optionalPeers": ["@nyssance/atlas"] }, "sha512-BIv1qP/rn6o3un+MrX3VLA99QnyGN1Eiv8ELTmrJtr5TzbOPTZpMBoL4E42kclwzT8PTw9HfuARYDYV+kYzyHw=="],
+    "@alwith/module-desktop-shell": ["@alwith/module-desktop-shell@0.5.3", "", { "peerDependencies": { "@nyssance/atlas": "^0.1.3", "@tauri-apps/api": "^3.0.0-alpha.3" }, "optionalPeers": ["@nyssance/atlas"] }, "sha512-LVDwaNRgdR77xXJOpghCGxy0N0WedwYAakBHTs2cPTwLtzk/cyXRYnEtE0Jm4aj3CxN98zZ+XpWI5TREZyw3/g=="],
 
     "@tauri-apps/api": ["@tauri-apps/api@3.0.0-alpha.3", "", {}, "sha512-lkMIhoFGZP7t23ykG12iNvYklhkf407Zibq0MsAWQAAADVLQbhUdp/vIXvHfodqO8NdovkKPoG493wg/Crn9qg=="],
   }

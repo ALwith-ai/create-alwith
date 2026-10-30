@@ -60,7 +60,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |
           bun run app-config
-          bun tauri build --target aarch64-apple-darwin
+          bun tauri build --target aarch64-apple-darwin --config '{"bundle":{"createUpdaterArtifacts":true}}'
       - name: Notarize and staple the DMG, collect the release assets
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}

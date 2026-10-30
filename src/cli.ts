@@ -1,4 +1,6 @@
 #!/usr/bin/env bun
+import { readFile } from "node:fs/promises";
+import { validateConfig } from "./config";
 import { parseArgs } from "node:util";
 import { createInterface } from "node:readline/promises";
 import type { AuthMode } from "./auth";
@@ -47,7 +49,7 @@ try {
   let parsed: ReturnType<typeof parseArgs>;
   try {
     parsed = parseArgs({args: Bun.argv.slice(2), allowPositionals: true, options: {
-      directory: {type: "string"}, name: {type: "string"}, "product-name": {type: "string"},
+      config: {type: "string"}, directory: {type: "string"}, name: {type: "string"}, "product-name": {type: "string"},
       identifier: {type: "string"}, auth: {type: "string"}, preset: {type: "string"}, yes: {type: "boolean"},
       github: {type: "string"}, "key-password": {type: "string"}, pubkey: {type: "string"},
       json: {type: "boolean"}, help: {type: "boolean"},
@@ -56,16 +58,19 @@ try {
   const {values, positionals} = parsed;
   machine = values.json === true;
   if (values.help) {
-    console.log("bun create alwith <dir> --name my-app --product-name 'My App' --identifier com.example.myapp --preset chat --auth alwith|none [--github owner/repo [--key-password <password> | --pubkey <key>]] --yes [--json]\nOmit arguments in an interactive terminal to be prompted. --directory is an alias for <dir>.\n--github turns on signed auto update through that repository's GitHub Releases: a new updater key pair is written to ~/.tauri/<name>.key (never into the project) unless --pubkey reuses an existing public key.");
+    console.log("bun create alwith <dir> --name my-app --product-name 'My App' --identifier com.example.myapp --preset chat --auth alwith|none [--github owner/repo [--key-password <password> | --pubkey <key>]] --yes [--json]\nUse --config /path/to/alwith.app.json to recreate an existing brand in a new directory.\nOmit arguments in an interactive terminal to be prompted. --directory is an alias for <dir>.\n--github turns on signed auto update through that repository's GitHub Releases: a new updater key pair is written to ~/.tauri/<name>.key (never into the project) unless --pubkey reuses an existing public key.");
   } else {
     if (positionals.length > 1 || (positionals.length && values.directory)) throw new GenerateError("INVALID_INPUT", "Provide one output directory, either positional or --directory");
     if (values.preset && values.preset !== "chat") throw new GenerateError("INVALID_INPUT", "Only the chat preset is available");
+    const configFile = values.config as string | undefined;
+    if (configFile && ["name", "product-name", "identifier", "auth", "preset", "github", "pubkey", "key-password"].some(key => values[key] !== undefined)) throw new GenerateError("INVALID_INPUT", "--config supplies brand and account settings; do not combine it with brand or account flags");
+    const saved = configFile ? validateConfig(JSON.parse(await readFile(configFile, "utf8"))) : undefined;
     const fields = {
       directory: (values.directory ?? positionals[0]) as string | undefined,
-      name: values.name as string | undefined,
-      productName: values["product-name"] as string | undefined,
-      identifier: values.identifier as string | undefined,
-      auth: values.auth as string | undefined,
+      name: saved?.name ?? values.name as string | undefined,
+      productName: saved?.productName ?? values["product-name"] as string | undefined,
+      identifier: saved?.identifier ?? values.identifier as string | undefined,
+      auth: saved ? (saved.modules.includes("auth") ? "alwith" : "none") : values.auth as string | undefined,
     };
     if (!values.yes && !machine && process.stdin.isTTY && Object.values(fields).some(v => !v)) {
       const prompt = createInterface({input: process.stdin, output: process.stdout});
@@ -80,7 +85,7 @@ try {
     const interactive = !values.yes && !machine && process.stdin.isTTY;
     let github = values.github as string | undefined;
     let keyPassword = values["key-password"] as string | undefined;
-    if (github === undefined && interactive) {
+    if (!saved && github === undefined && interactive) {
       const prompt = createInterface({input: process.stdin, output: process.stdout});
       try { github = (await prompt.question("GitHub repository for releases and auto update (owner/repo, blank for none): ", {signal: controller.signal})).trim(); } finally { prompt.close(); }
     }
@@ -90,6 +95,7 @@ try {
     const result = await generateProjectWithResult({
       directory: fields.directory!, name: fields.name!, productName: fields.productName!, identifier: fields.identifier!, auth: fields.auth as AuthMode,
       ...(github ? {updates: {github, pubkey: values.pubkey as string | undefined, keyPassword}} : {}),
+      configFile,
       signal: controller.signal,
       onProgress: phase => { if (machine) console.log(JSON.stringify({type: "progress", phase})); },
     });

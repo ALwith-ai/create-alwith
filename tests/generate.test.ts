@@ -313,7 +313,8 @@ test("updates write a key pair outside the project and configure the GitHub rele
     endpoints: ["https://github.com/example/my-buddy/releases/latest/download/latest.json"],
     requireSignedVersion: true,
   });
-  expect(tauri.bundle.createUpdaterArtifacts).toBe(true);
+  expect(tauri.bundle.createUpdaterArtifacts).toBeUndefined();
+  expect(await readFile(join(directory, ".github/workflows/release.yml"), "utf8")).toContain('--config \'{"bundle":{"createUpdaterArtifacts":true}}\'');
   expect(await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8")).toContain("tauri_plugin_updater::Builder::new().build()");
   expect(await readFile(join(directory, ".github/workflows/release.yml"), "utf8")).toContain("release-manifest.ts collect");
   expect(await readFile(join(directory, "src/settings/updates.tsx"), "utf8")).toContain("checkForUpdates");
