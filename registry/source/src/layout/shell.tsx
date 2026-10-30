@@ -11,15 +11,15 @@ export function Shell({ leading, navigation, trailing, children }: { leading: Re
     <Atlas
       className="desktop-shell"
       data-atlas-layout="navigation"
-      options={{ initialRegion: "workspace", insetTop: 0, flickMinIndex: 0, manageInert: false }}
+      options={{ initialRegion: "workspace", flickMinIndex: 0, manageInert: false }}
       onReady={setAtlas}
       aria-label="Workspace"
     >
       <AtlasRegion id="leading" data-atlas-leading className="h-full">{leading}</AtlasRegion>
       <AtlasNavigation className="h-full">
-        <div className="desktop-shell-navigation">{navigation}</div>
+        <div data-atlas-surface className="desktop-shell-navigation">{navigation}</div>
       </AtlasNavigation>
-      <AtlasRegion id="workspace" className="desktop-shell-workspace">{children}</AtlasRegion>
+      <AtlasRegion id="workspace" className="desktop-shell-workspace"><div data-atlas-surface>{children}</div></AtlasRegion>
       {trailing && <AtlasRegion id="trailing" data-atlas-trailing className="relative h-full overflow-hidden">{trailing}</AtlasRegion>}
     </Atlas>
   )
