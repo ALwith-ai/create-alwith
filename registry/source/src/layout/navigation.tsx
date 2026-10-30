@@ -3,7 +3,6 @@ import { sessionGroup } from "@nyssance/codex-acp-v2/client"
 import {
   NavigationStack,
   SessionList,
-  SessionStateMenu,
   type SessionSummary,
   useSessionListExpansion
 } from "@alwith/module-chat/session-list"
@@ -29,8 +28,6 @@ export function Navigation({ selectedId, onNew, onSelect, onSettings, onPets, pe
   const email = usePlatformAuth((state) => state.user?.login_email)
   const [viewport, setViewport] = useState<HTMLDivElement | null>(null)
   const expansion = useSessionListExpansion()
-  const runStates = useClient((state) => state.runStates)
-  const sessionRows = useClient((state) => state.sessionList)
   // Groups start closed; open the one holding the shown session once.
   const group = useClient((state) => {
     const row = state.sessionList.find((item) => item.sessionId === selectedId)
@@ -47,18 +44,11 @@ export function Navigation({ selectedId, onNew, onSelect, onSettings, onPets, pe
         <img src={appIcon} alt="" className="size-6 rounded-md" draggable={false} />
         <span className="font-semibold">{app.productName}</span>
       </div>
-      <div className="flex shrink-0 items-center gap-1 overflow-x-auto px-3">
+      <div className="flex shrink-0 items-center gap-1 px-3">
         <Button variant="outline" size="icon" className="shrink-0" aria-label={t("newChat")} onClick={onNew}>
           <MessageSquarePlusIcon />
         </Button>
         <Button variant="ghost" size="icon" disabled={!petsReady} onClick={onPets} aria-label={t("pets")}><PawPrintIcon /></Button>
-        <SessionStateMenu
-          sessions={Object.values(runStates).filter((record) => !record.reusableDraft)}
-          t={t}
-          onSelect={(record) => onSelect(sessionRows.find((row) => row.sessionId === record.sessionId) ?? {
-            sessionId: record.sessionId, cwd: record.cwd, title: record.title || null, updatedAt: null, archived: false
-          })}
-        />
       </div>
       <div ref={setViewport} className="mt-3 min-h-0 flex-1 overflow-y-auto px-2">
         <NavigationStack>
