@@ -6,19 +6,19 @@
     },
     {
       "name": "chat",
-      "sha256": "2779d9e8525ac3b1464d7db96a8bba38818032c411826a223cb5b01693c7b37f"
+      "sha256": "309ce94159e57a6ef05a7a73a36f76edcfba16fbc2aad10d99e966d06764a393"
     },
     {
       "name": "sidebar",
-      "sha256": "6ca5de6bd998b2865ca01d7232b75dbada3ea5aef13d3b509ecfed3e867fcafd"
+      "sha256": "821acad5ae30711d3e16db86a33ec339efa5ad6924d0b25ce5167d69ef9bc959"
     },
     {
       "name": "shell",
-      "sha256": "284cf8db86fbd6bd58b0e1c2d3f06284fa7f4b37f6fac42453664540752d1dd8"
+      "sha256": "41b72582453f6508dca83792481afc7127b0f8bb6897286c61021492b1c6a906"
     },
     {
       "name": "settings",
-      "sha256": "d1c17d6ef8678592240eb91023e98428b95f57e8169c1724ee06d01a318a70e8"
+      "sha256": "6832f738c11257c04a28e0581c0fb73d0c86b183f3b560c07dfe6be62e286da4"
     }
   ]
 }

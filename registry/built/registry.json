@@ -63,11 +63,6 @@
           "path": "registry/source/src/layout/shell.tsx",
           "type": "registry:file",
           "target": "src/layout/shell.tsx"
-        },
-        {
-          "path": "registry/source/src/layout/leading.tsx",
-          "type": "registry:file",
-          "target": "src/layout/leading.tsx"
         }
       ]
     },

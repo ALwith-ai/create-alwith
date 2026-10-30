@@ -1,6 +1,7 @@
+import { DesktopHeader } from "@alwith/module-desktop-shell/react"
 import {PetCenter, PetLounge} from "@alwith/module-auth/pets/react"
 import {initializeVibemonMain, updateMainPetSurface, requestPet} from "./auth/pets"
-import { SettingsPage } from "./settings/page"
+import { openDesktopSettings } from "@alwith/module-desktop-shell/native"
 import app from "../alwith.app.json"
 import { onDesktopNewChat } from "@alwith/module-desktop-shell/native"
 import { ConversationView } from "@alwith/module-chat/conversation"
@@ -10,7 +11,6 @@ import { useTranslation } from "react-i18next"
 
 import { useChatHost } from "./chat-host"
 import { client, useClient, useSession, watchRunStates } from "./client"
-import { Leading } from "./layout/leading"
 import { Navigation } from "./layout/navigation"
 import { Shell } from "./layout/shell"
 
@@ -55,9 +55,8 @@ export function App() {
   const { t } = useTranslation()
   const connection = useClient((state) => state.connection)
   const connectionError = useClient((state) => state.connectionError)
-  const [pets, setPets] = useState(false)
+  const [region, setRegion] = useState("workspace")
   const [petsReady, setPetsReady] = useState(false)
-  const [settings, setSettings] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const session = useSession(selected)
@@ -66,8 +65,7 @@ export function App() {
   const show = useCallback((id: string) => {
     sessionStorage.setItem(SESSION_KEY, id)
     setSelected(id)
-    setSettings(false)
-    setPets(false)
+    setRegion("workspace")
     setError(null)
   }, [])
   const report = (caught: unknown) => setError(caught instanceof Error ? caught.message : String(caught))
@@ -107,8 +105,8 @@ export function App() {
     return () => { active = false; window.removeEventListener("pet:open-chat", onOpen); window.removeEventListener("pet:error", onError) }
   }, [show])
   useEffect(() => {
-    if (petsReady) void updateMainPetSurface(selected, !pets && !settings).catch(report)
-  }, [petsReady, selected, pets, settings])
+    if (petsReady) void updateMainPetSurface(selected, region === "workspace").catch(report)
+  }, [petsReady, selected, region])
 
   async function newChat() {
     try {
@@ -138,22 +136,18 @@ export function App() {
   }
 
   const status = connection === "ready" ? t("ready") : connection === "connecting" ? t("connecting") : connection
-  const header = (
-    <header className="flex h-12 shrink-0 items-center gap-3 border-b px-4" data-tauri-drag-region>
-      <span className="truncate text-sm font-medium">{session ? (session.title ?? t("untitled")) : null}</span>
-      <span className="ms-auto shrink-0 text-xs text-muted-foreground">{status}</span>
-      {(error ?? connectionError) && <span className="truncate text-xs text-destructive">{error ?? connectionError}</span>}
-    </header>
-  )
+  const header = <DesktopHeader title={session ? (session.title ?? t("untitled")) : null} status={status} error={error ?? connectionError} />
 
   return (
     <SessionListProvider host={host} client={client}>
       <Shell
-        leading={<Leading />}
-        trailing={petsReady && <PetLounge active={!pets} nest={{inlineEnd: 16, bottom: 16, size: 96}} onOpenCenter={() => setPets(true)} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
-        navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onSelect={(row) => void select(row)} onSettings={() => { setPets(false); setSettings(true) }} onPets={() => {setSettings(false); setPets(true)}} petsReady={petsReady} />}
+        leading={petsReady && <PetCenter />}
+        region={region}
+        onRegionChange={(region) => setRegion(region ?? "workspace")}
+        trailing={petsReady && <PetLounge active={region === "trailing"} onOpenCenter={() => setRegion("leading")} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
+        navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onSelect={(row) => void select(row)} onSettings={() => { void openDesktopSettings(t("settings")).catch(report) }} onPets={() => setRegion("leading")} petsReady={petsReady} />}
       >
-        {pets && petsReady ? <PetCenter /> : settings ? <SettingsPage onClose={() => setSettings(false)} /> : session ? (
+        {session ? (
           <ConversationView key={session.id} session={session} client={client} host={host} header={header} />
         ) : (
           header

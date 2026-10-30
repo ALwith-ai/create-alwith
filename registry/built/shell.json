@@ -5,15 +5,9 @@
   "files": [
     {
       "path": "registry/source/src/layout/shell.tsx",
-      "content": "// Default shell block: users own this composition; native capabilities stay in the package.\nimport { connectDesktopAtlas } from \"@alwith/module-desktop-shell\"\nimport { type AtlasController } from \"@nyssance/atlas/dom\"\nimport { Atlas, AtlasNavigation, AtlasRegion } from \"@nyssance/atlas/react\"\nimport { type ReactNode, useEffect, useState } from \"react\"\n\nexport function Shell({ leading, navigation, trailing, children }: { leading: ReactNode; navigation: ReactNode; trailing?: ReactNode; children: ReactNode }) {\n  const [atlas, setAtlas] = useState<AtlasController | null>(null)\n  useEffect(() => atlas ? connectDesktopAtlas(atlas) : undefined, [atlas])\n  return (\n    <Atlas\n      className=\"desktop-shell\"\n      data-atlas-layout=\"navigation\"\n      options={{ initialRegion: \"workspace\", flickMinIndex: 0, manageInert: false }}\n      onReady={setAtlas}\n      aria-label=\"Workspace\"\n    >\n      <AtlasRegion id=\"leading\" data-atlas-leading className=\"h-full\">{leading}</AtlasRegion>\n      <AtlasNavigation className=\"h-full\">\n        <div data-atlas-surface className=\"desktop-shell-navigation\">{navigation}</div>\n      </AtlasNavigation>\n      <AtlasRegion id=\"workspace\" className=\"desktop-shell-workspace\"><div data-atlas-surface>{children}</div></AtlasRegion>\n      {trailing && <AtlasRegion id=\"trailing\" data-atlas-trailing className=\"relative h-full overflow-hidden\">{trailing}</AtlasRegion>}\n    </Atlas>\n  )\n}\n",
+      "content": "export { DesktopWorkspace as Shell } from \"@alwith/module-desktop-shell/react\"\n",
       "type": "registry:file",
       "target": "src/layout/shell.tsx"
-    },
-    {
-      "path": "registry/source/src/layout/leading.tsx",
-      "content": "import appIcon from \"@/generated/app-icon\"\nimport { useTranslation } from \"react-i18next\"\n\n/** The leading screen behind the navigation: a place for the user's own home or business pages. */\nexport function Leading() {\n  const { t } = useTranslation()\n  return (\n    <div className=\"flex h-full flex-col items-center justify-center gap-2 p-8 text-center\">\n      <img src={appIcon} alt=\"\" className=\"size-24\" draggable={false} />\n      <h1 className=\"text-xl font-semibold\">{t(\"leadingTitle\")}</h1>\n      <p className=\"max-w-sm text-sm text-muted-foreground\">{t(\"leadingBody\")}</p>\n    </div>\n  )\n}\n",
-      "type": "registry:file",
-      "target": "src/layout/leading.tsx"
     }
   ],
   "type": "registry:block"

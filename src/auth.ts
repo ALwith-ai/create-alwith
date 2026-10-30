@@ -18,12 +18,13 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
   for (const file of ["vibemon.html", "vibemon-bubble.html", "src/vibemon.tsx", "src/vibemon-bubble.tsx"]) await rm(join(root, file), {force: true});
   await edit("src/App.tsx", source => source
     .replace(/^import .* from "(?:@alwith\/module-auth[^"]*|\.\/auth\/pets)"\n/gm, "")
-    .replace(/^  const \[(pets|petsReady),.*\n/gm, "")
-    .replace(/^    setPets\(false\)\n/gm, "")
+    .replace(/^  const \[(region|petsReady),.*\n/gm, "")
+    .replace(/^    setRegion\("workspace"\)\n/gm, "")
     .replace(/  useEffect\(\(\) => \{\n    let active = true[\s\S]*?\n  async function newChat/, "  async function newChat")
-    .replace('onSettings={() => { setPets(false); setSettings(true) }} onPets={() => {setSettings(false); setPets(true)}} petsReady={petsReady}', 'onSettings={() => setSettings(true)}')
-    .replace('pets && petsReady ? <PetCenter /> : settings', 'settings')
+    .replace('onPets={() => setRegion("leading")} petsReady={petsReady}', '')
+    .replace(/^        (leading=|region=|onRegionChange=).*\n/gm, "")
     .replace(/^        trailing=\{petsReady && <PetLounge.*\n/m, ""));
+  await edit("src/settings-window.tsx", source => source.replace(/^import .*initPlatformAuth.*\n/m, "").replace(/^void initPlatformAuth\(\)\n/m, ""));
   await edit("src/i18n.ts", source => source.replace(/^import .*vibemonLocales.*\n/m, "").replace(/^for \(const language.*vibemonLocales.*\n/m, ""));
   await edit("src/index.css", source => source.split("\n").filter(line => !line.includes("module-auth")).join("\n"));
   await edit("package.json", source => {
@@ -39,9 +40,9 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
     .replace(/^import \{ logoutPlatform, usePlatformAuth \}.*\n/m, "")
     .replace(/^  const account = .*\n/m, "")
     .replace(/  async function signOut\(\) \{[\s\S]*?\n  \}\n/, "")
-    .replace(/      <div className="flex items-center justify-between gap-4">\n        <div className="min-w-0">[\s\S]*?^      <\/div>\n/m, "")
+    .replace(/      <div className="desktop-shell-settings-row">\n        <div className="min-w-0">[\s\S]*?^      <\/div>\n/m, "")
     .replace(/^import \{ useState \}.*\n/m, "")
-    .replace(", LogOutIcon", "")
+    .replace(/^import \{ LogOutIcon \}.*\n/m, "")
     .replace(/^import \{ Alert, AlertDescription \}.*\n/m, "")
     .replace(/^  const \[(error|busy),.*\n/gm, "")
     .replace(/^      \{error &&.*\n/m, ""));
@@ -62,11 +63,11 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
     .replace(/\.plugin\(alwith_module_store::tauri::init\(\)\)\n        \.plugin\(alwith_auth_client::tauri::init\(Some\([\s\S]*?\)\)\);/, ".plugin(alwith_module_store::tauri::init());"));
   await edit("src-tauri/capabilities/default.json", source => {
     const value = JSON.parse(source);
-    value.windows = ["main"];
+    value.windows = ["main", "settings"];
     value.description = "Chat window: Runtime relay, logs, opening links and local preferences";
     value.permissions = value.permissions.filter((permission: unknown) => typeof permission === "string" && permission !== "os:default" && !permission.startsWith("alwith-auth-client:"));
     return JSON.stringify(value, null, 2) + "\n";
   });
   await edit("scripts/stage.ts", source => source.replace(/^import .*stageNativeAuth.*\n/m, "").replace(/\n\/\/ 5\. The closed auth library[\s\S]*$/, "\n"));
-  await edit("vite.config.ts", source => source.replace(', "@alwith/module-auth"', "").replace(/^  build:.*\n/m, ""));
+  await edit("vite.config.ts", source => source.replace(', "@alwith/module-auth"', "").replace(/^  build:.*\n/m, '  build: {rollupOptions: {input: {main: "index.html", settings: "settings.html"}}},\n'));
 }

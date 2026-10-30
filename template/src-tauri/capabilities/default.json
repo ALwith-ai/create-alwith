@@ -5,7 +5,8 @@
   "windows": [
     "main",
     "vibemon",
-    "bubble-menu-vibemon"
+    "bubble-menu-vibemon",
+    "settings"
   ],
   "permissions": [
     "core:default",
@@ -26,6 +27,10 @@
     },
     "alwith-module-store:default",
     "alwith-auth-client:default",
-    "alwith-auth-client:pets"
+    "alwith-auth-client:pets",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-show",
+    "core:window:allow-set-focus",
+    "core:window:allow-close"
   ]
 }
