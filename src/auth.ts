@@ -23,7 +23,7 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
     .replace(/  useEffect\(\(\) => \{\n    let active = true[\s\S]*?\n  async function newChat/, "  async function newChat")
     .replace('onSettings={() => { setPets(false); setSettings(true) }} onPets={() => {setSettings(false); setPets(true)}} petsReady={petsReady}', 'onSettings={() => setSettings(true)}')
     .replace('pets && petsReady ? <PetCenter /> : settings', 'settings')
-    .replace(/^      \{petsReady && <PetLounge.*\n/m, ""));
+    .replace(/^        trailing=\{petsReady && <PetLounge.*\n/m, ""));
   await edit("src/i18n.ts", source => source.replace(/^import .*vibemonLocales.*\n/m, "").replace(/^for \(const language.*vibemonLocales.*\n/m, ""));
   await edit("src/index.css", source => source.split("\n").filter(line => !line.includes("module-auth")).join("\n"));
   await edit("package.json", source => {

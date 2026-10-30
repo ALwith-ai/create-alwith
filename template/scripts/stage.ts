@@ -54,7 +54,8 @@ console.log(`bun -> ${bun}`)
 const codexPackage = join(root, `node_modules/@openai/codex-${target.codex}`)
 for (const name of ["codex", "codex-code-mode-host"]) {
   const staged = place(join(codexPackage, "vendor", triple, "bin", `${name}${target.exe}`), name)
-  await sign(staged)
+  // Match ALwith U: preserve the vendor-signed Codex executables byte-for-byte.
+  if (mac) await $`codesign --verify --strict ${staged}`.quiet()
   console.log(`${name} -> ${staged}`)
 }
 
@@ -69,5 +70,5 @@ console.log(`codex-acp-v2 -> ${join(adapterDirectory, "codex-acp-v2.mjs")}`)
 const nativeDirectory = join(resources, "native")
 rmSync(nativeDirectory, { recursive: true, force: true })
 const nativeAuth = stageNativeAuth(triple, nativeDirectory, licenses)
-await sign(nativeAuth)
+if (process.env.APPLE_SIGNING_IDENTITY) await sign(nativeAuth)
 console.log(`native auth -> ${nativeAuth}`)

@@ -150,6 +150,7 @@ export function App() {
     <SessionListProvider host={host} client={client}>
       <Shell
         leading={<Leading />}
+        trailing={petsReady && <PetLounge active={!pets} nest={{inlineEnd: 16, bottom: 16, size: 96}} onOpenCenter={() => setPets(true)} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
         navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onSelect={(row) => void select(row)} onSettings={() => { setPets(false); setSettings(true) }} onPets={() => {setSettings(false); setPets(true)}} petsReady={petsReady} />}
       >
         {pets && petsReady ? <PetCenter /> : settings ? <SettingsPage onClose={() => setSettings(false)} /> : session ? (
@@ -158,7 +159,6 @@ export function App() {
           header
         )}
       </Shell>
-      {petsReady && <PetLounge active={!pets} nest={{inlineEnd: 16, bottom: 16, size: 96}} onOpenCenter={() => setPets(true)} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
     </SessionListProvider>
   )
 }

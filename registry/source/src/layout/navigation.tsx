@@ -48,9 +48,8 @@ export function Navigation({ selectedId, onNew, onSelect, onSettings, onPets, pe
         <span className="font-semibold">{app.productName}</span>
       </div>
       <div className="flex shrink-0 items-center gap-1 overflow-x-auto px-3">
-        <Button variant="outline" className="min-w-0 flex-1 justify-start gap-2" onClick={onNew}>
+        <Button variant="outline" size="icon" className="shrink-0" aria-label={t("newChat")} onClick={onNew}>
           <MessageSquarePlusIcon />
-          {t("newChat")}
         </Button>
         <Button variant="ghost" size="icon" disabled={!petsReady} onClick={onPets} aria-label={t("pets")}><PawPrintIcon /></Button>
         <SessionStateMenu

@@ -4,7 +4,7 @@ import { type AtlasController } from "@nyssance/atlas/dom"
 import { Atlas, AtlasNavigation, AtlasRegion } from "@nyssance/atlas/react"
 import { type ReactNode, useEffect, useState } from "react"
 
-export function Shell({ leading, navigation, children }: { leading: ReactNode; navigation: ReactNode; children: ReactNode }) {
+export function Shell({ leading, navigation, trailing, children }: { leading: ReactNode; navigation: ReactNode; trailing?: ReactNode; children: ReactNode }) {
   const [atlas, setAtlas] = useState<AtlasController | null>(null)
   useEffect(() => atlas ? connectDesktopAtlas(atlas) : undefined, [atlas])
   return (
@@ -20,6 +20,7 @@ export function Shell({ leading, navigation, children }: { leading: ReactNode; n
         <div className="desktop-shell-navigation">{navigation}</div>
       </AtlasNavigation>
       <AtlasRegion id="workspace" className="desktop-shell-workspace">{children}</AtlasRegion>
+      {trailing && <AtlasRegion id="trailing" data-atlas-trailing className="relative h-full overflow-hidden">{trailing}</AtlasRegion>}
     </Atlas>
   )
 }

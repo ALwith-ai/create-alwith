@@ -8,3 +8,5 @@ Pages are editable @alwith registry blocks; replace an entire page to customize 
 Prefer Hasgard for desktop debugging and UI verification: inspect the running application's snapshots, elements, interactions and logs. Use other tools when Hasgard is unavailable or unsuitable for the issue.
 Do not design retries unless absolutely necessary. Report failures clearly without automatically repeating operations.
 Test scripts that start Runtime use startTestRuntime from @alwith/api/node, with mocks by default. Live engine sessions require explicit authorization and an isolated home.
+
+Preserve vendor-signed Codex and code-mode-host binaries byte-for-byte during staging and local installation, as ALwith U does. Never apply ad-hoc or --deep re-signing to them. Release signing belongs to the existing CI signing configuration. Verify with bun run check:codex-signatures after staging and against the built application.

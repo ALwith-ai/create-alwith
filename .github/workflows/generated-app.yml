@@ -52,7 +52,9 @@ jobs:
           bun run check
           bun run check:independence
           bun run stage
+          bun run check:codex-signatures
           bun tauri build --bundles app -- --locked
+          bun run check:codex-signatures "src-tauri/target/release/bundle/macos/${{ matrix.product }}.app"
       - name: Verify brand and package for download
         working-directory: generated
         env:
@@ -70,6 +72,7 @@ jobs:
           assert info['CFBundleExecutable'] == os.environ['APP_NAME']
           PY
           codesign --force --sign - --entitlements src-tauri/Entitlements.plist "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app"
+          bun run check:codex-signatures "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app"
           codesign --verify --deep --strict "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app"
           ditto -c -k --sequesterRsrc --keepParent "src-tauri/target/release/bundle/macos/$APP_PRODUCT.app" "$APP_NAME-macos-arm64.zip"
       - uses: actions/upload-artifact@v4

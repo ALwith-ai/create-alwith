@@ -6,15 +6,15 @@
     },
     {
       "name": "chat",
-      "sha256": "5b76e041c19cf7433bd3e620a65de1233d5d3f1166c833fe81fcad3359568731"
+      "sha256": "2779d9e8525ac3b1464d7db96a8bba38818032c411826a223cb5b01693c7b37f"
     },
     {
       "name": "sidebar",
-      "sha256": "f1a813e81b216648fae8c88adaac8f4ec7a9f33a6655c7a41cf308abfcaa009f"
+      "sha256": "1e572b7c59fd197b59af5c19f2bba854e4059628eec7c8126297da0ec4823c81"
     },
     {
       "name": "shell",
-      "sha256": "050e46854cf4380c784beede4166a4a5ecba96a134c179dd71a9e46b8c22c3a5"
+      "sha256": "5404348b5a8383f7c65bb2dd1b65cbbe1c7a4a6021734f736c2d51d4d5e0bbe2"
     },
     {
       "name": "settings",

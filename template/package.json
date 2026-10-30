@@ -13,7 +13,8 @@
     "tauri": "tauri",
     "dev:tauri": "tauri dev --features hasgard-testing",
     "check": "tsc --noEmit -p tsconfig.json",
-    "check:independence": "bun scripts/check-independence.ts"
+    "check:independence": "bun scripts/check-independence.ts",
+    "check:codex-signatures": "bun scripts/check-codex-signatures.ts"
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "^2.1.0",
