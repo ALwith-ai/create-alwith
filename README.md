@@ -30,7 +30,7 @@ Runtime manages agents. Codex ACP owns project context and conversations; API su
 
 The generated project includes `fabfile.py` and `requirements-dev.txt`. After installing
 its Bun dependencies, run `python3 -m pip install -r requirements-dev.txt` to enable
-`fab dev` (alias `fab tauri`), `fab check`, and `fab build`. Fabric wraps the existing
+`fab dev` (alias `fab tauri`), `fab check`, `fab build`, and `fab upgrade` (alias `fab u`). Fabric wraps the existing
 Bun/Tauri workflow and is optional; each generated project includes its own README.
 
 ## Development

@@ -37,3 +37,12 @@ def check(_context) -> None:
     run("bun", "run", "build")
     run("bun", "run", "stage")
     run("cargo", "check", "--manifest-path", "src-tauri/Cargo.toml", "--locked", "--features", "hasgard-testing")
+
+
+@task(aliases=["u"])
+def upgrade(_context) -> None:
+    """Update Bun and Cargo dependencies within their declared version ranges."""
+    run("bun", "install", "--frozen-lockfile")
+    run("bun", "update")
+    # Published npm packages contain the Rust SDKs; update them before Cargo resolves paths.
+    run("cargo", "update", "--manifest-path", "src-tauri/Cargo.toml")
