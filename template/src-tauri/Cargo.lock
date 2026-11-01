@@ -57,7 +57,6 @@ dependencies = [
  "alwith-api",
  "alwith-auth-client",
  "alwith-module-store",
- "alwith-native-client",
  "log",
  "serde",
  "serde_json",
@@ -4451,6 +4450,7 @@ dependencies = [
  "tauri-plugin",
  "tauri-plugin-updater",
  "time",
+ "tokio",
 ]
 
 [[package]]
