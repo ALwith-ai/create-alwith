@@ -1,5 +1,5 @@
 import appIcon from "@/generated/app-icon"
-import { sessionGroup } from "@nyssance/codex-acp-v2/client"
+import { sessionGroup } from "@alwith/module-chat/client"
 import {
   NavigationStack,
   SessionList,

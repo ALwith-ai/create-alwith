@@ -9,6 +9,7 @@ for (const path of ["package.json", "template/package.json"]) {
   assert(!pkg.overrides, `${path}: overrides are local-only`);
   for (const section of ["dependencies", "devDependencies", "optionalDependencies"]) {
     for (const [name, range] of Object.entries(pkg[section] ?? {})) {
+      assert(name !== "@nyssance/codex-acp-v2", `${path}: consume the adapter through @alwith/module-chat`);
       assert(!/^(file:|link:|workspace:|github:|git\+|\/)/.test(String(range)), `${name}: registry dependency required`);
     }
   }

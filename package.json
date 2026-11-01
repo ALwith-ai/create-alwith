@@ -1,6 +1,6 @@
 {
   "name": "create-alwith",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "bin": {
     "create-alwith": "src/cli.ts"
@@ -33,7 +33,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@alwith/module-desktop-shell": "^0.5.5"
+    "@alwith/module-desktop-shell": "^0.5.7"
   },
   "license": "AGPL-3.0-only",
   "description": "Generate a standalone ALwith WorkBuddy with editable page blocks.",

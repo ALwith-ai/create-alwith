@@ -1,9 +1,9 @@
 import { observeRunStates } from "@alwith/api"
 // The app-wide Codex client and its React bindings. Everything about holding the agent, routing
 // updates by session, replaying on open, prompting with a receipt and answering permissions lives in
-// `@nyssance/codex-acp-v2/client`; API supplies Runtime transport and state observation.
-import type { Session } from "@nyssance/codex-acp-v2/client";
-import { CodexClient, type CodexClientState } from "@nyssance/codex-acp-v2/client"
+// `@alwith/module-chat/client`; API supplies Runtime transport and state observation.
+import type { Session } from "@alwith/module-chat/client";
+import { CodexClient, type CodexClientState } from "@alwith/module-chat/client"
 import { useStore } from "zustand"
 
 import app from "../alwith.app.json"
