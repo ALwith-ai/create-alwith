@@ -12,3 +12,4 @@
 @import "@alwith/module-desktop-shell/theme.css";
 @import "@alwith/module-desktop-shell/tailwind.css";
 @source "../node_modules/@alwith/module-chat/dist";
+@source "../node_modules/@nyssance/shadcn/dist/vega";
