@@ -190,7 +190,7 @@ export function App() {
         onScreenChange={setScreen}
         onRegionChange={setRegion}
         trailing={petsReady && <PetLounge active={region === "trailing"} onOpenCenter={() => setScreen("leading")} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
-        navigation={<Navigation selectedId={selected} onNew={() => void newChat()} onNewInCollection={(collectionId) => void newChat(undefined, collectionId)} onSelect={(row) => void select(row)} onSettings={() => { void openDesktopSettings(t("settings")).catch(report) }} onPets={() => { setLeadingPage("pets"); setScreen("leading") }} onShowPet={() => { void requestPet("open-pet").then(result => { if (result === "unavailable") { setLeadingPage("pets"); setScreen("leading") } }).catch(report) }} petsReady={petsReady} />}
+        navigation={<Navigation selectedId={selected} screen={screen} onSwitchScreen={() => setScreen(screen === "main" ? "leading" : "main")} onNew={() => void newChat()} onNewInCollection={(collectionId) => void newChat(undefined, collectionId)} onSelect={(row) => void select(row)} onSettings={() => { void openDesktopSettings(t("settings")).catch(report) }} onPets={() => { setLeadingPage("pets"); setScreen("leading") }} onShowPet={() => { void requestPet("open-pet").then(result => { if (result === "unavailable") { setLeadingPage("pets"); setScreen("leading") } }).catch(report) }} petsReady={petsReady} />}
       >
         <div className="main-chat-surface flex min-h-0 flex-1 flex-col">
         <ConversationProvider host={host} client={client}>

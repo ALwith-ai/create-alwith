@@ -13,9 +13,11 @@ import {
   NavigationHeader,
   NavigationItemButton,
   NavigationLeading,
+  NavigationScreenSwitch,
   NavigationStack,
   NavigationTabs,
   SessionList,
+  SessionListFilter,
   SessionRow,
   type SessionSummary,
   useActivityNotification,
@@ -24,6 +26,7 @@ import {
   useSessionListHost
 } from "@alwith/module-chat/session-list"
 import { openDesktopGuide } from "@alwith/module-desktop-shell/native"
+import { DesktopNavigationFooter } from "@alwith/module-desktop-shell/react"
 import { ActivityIcon, FolderIcon, FolderMinusIcon, LifeBuoyIcon, PawPrintIcon, PlusIcon, SettingsIcon, StarIcon } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -53,8 +56,10 @@ function SessionRowActions({ sessionRow, collectionId }: { sessionRow: SessionSu
 }
 
 /** The persistent Atlas navigation column: U's header, Collections, Chats and Activity panels and account menu, from module-chat. */
-export function Navigation({ selectedId, onNew, onNewInCollection, onSelect, onSettings, onPets, onShowPet, petsReady }: {
+export function Navigation({ selectedId, screen, onSwitchScreen, onNew, onNewInCollection, onSelect, onSettings, onPets, onShowPet, petsReady }: {
   selectedId: string | null
+  screen: "main" | "leading"
+  onSwitchScreen: () => void
   onNew: () => void
   onNewInCollection: (collectionId: string) => void
   onSelect: (row: SessionSummary) => void
@@ -110,6 +115,7 @@ export function Navigation({ selectedId, onNew, onNewInCollection, onSelect, onS
         view={view}
         onViewChange={setView}
         onReset={(key) => key === "sessions" && expansion.reset?.()}
+        trailing={view === "sessions" ? <SessionListFilter onCollapseAll={() => expansion.reset?.()} /> : undefined}
         notifications={activityNotification ? new Set(["activity"]) : undefined}
       />
       <div ref={setViewport} className="desktop-shell-navigation-list">
@@ -136,8 +142,9 @@ export function Navigation({ selectedId, onNew, onNewInCollection, onSelect, onS
           )}
         </NavigationStack>
       </div>
-      <div className="desktop-shell-navigation-footer">
-        <div className="flex h-[var(--navigation-row-height)] items-center gap-0.5">
+      <DesktopNavigationFooter>
+        <NavigationScreenSwitch screen={screen} onSwitch={onSwitchScreen} />
+        <div data-sidebar-footer-row className="flex h-[var(--navigation-row-height)] items-center gap-0.5">
           <div className="min-w-0 flex-1">
             {user && (
               <AccountMenu
@@ -163,7 +170,7 @@ export function Navigation({ selectedId, onNew, onNewInCollection, onSelect, onS
             </AccountMenuItem>
           </HelpMenu>
         </div>
-      </div>
+      </DesktopNavigationFooter>
     </>
   )
 }
