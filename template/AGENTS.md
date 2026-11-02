@@ -1,0 +1,18 @@
+# Generated WorkBuddy
+
+Develop, debug and validate with local candidate packages in isolated environments. Publish only after the complete implementation meets the final delivery standard and quality and compatibility checks pass. Never publish merely to unblock debugging or release repeatedly during development. Keep local candidate paths out of production manifests and lockfiles.
+Brand configuration lives only in alwith.app.json. Run bun run app-config after changing it.
+Use published npm packages with ^ version ranges and bun.lock. Never depend on a maintainer workspace or private source tree.
+Runtime owns agents; never spawn Codex directly or create another session database. Applications consume the client and adapter staging through @alwith/module-chat/client and @alwith/module-chat/stage; do not directly depend on codex-acp. Protocol implementation remains in its adapter. API must not interpret protocol metadata.
+Pages are editable @alwith registry blocks; replace an entire page to customize it. Shared capabilities belong in @alwith/module-* packages. Keep toolbars on one compact row and avoid decorative nested cards.
+Prefer Hasgard for desktop debugging and UI verification: inspect the running application's snapshots, elements, interactions and logs. Use other tools when Hasgard is unavailable or unsuitable for the issue.
+Do not design retries unless absolutely necessary. Report failures clearly without automatically repeating operations.
+Test scripts that start Runtime use startTestRuntime from @alwith/api/node, with mocks by default. Live engine sessions require explicit authorization and an isolated home.
+
+Preserve vendor-signed Codex and code-mode-host binaries byte-for-byte during staging and local installation, as ALwith U does. Never apply ad-hoc or --deep re-signing to them. Release signing belongs to the existing CI signing configuration. Verify with bun run check:codex-signatures after staging and against the built application.
+
+## Shared defaults
+
+The generated app starts from the shared desktop defaults. Template wiring must not override module-owned theme, geometry, pet placement or window behavior. Fix missing defaults in the owning module; only add app-specific overrides after an explicit customization request.
+
+Dependency declarations must use version ranges, not exact patch pins. Stable npm dependencies use `^major.minor`; Cargo uses compatible major/minor ranges. Lockfiles retain exact resolved versions. Prerelease identifiers must remain valid and platform-specific binary aliases must select the correct platform.

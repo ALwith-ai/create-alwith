@@ -1,0 +1,7 @@
+[install]
+linker = "hoisted"
+registry = "https://registry.npmmirror.com"
+
+[install.scopes]
+"@alwith" = { url = "https://registry.npmjs.org" }
+"@nyssance" = { url = "https://registry.npmjs.org" }

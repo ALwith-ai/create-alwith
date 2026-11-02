@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "name": "login",
+      "sha256": "e187278ab8ed4bad0a49a857c6d5b4808bed7c2972d7a187fa45aa5fb31f8b90"
+    },
+    {
+      "name": "chat",
+      "sha256": "f9bdd7815758bea6a01f976c7fdbe2c961b554c84dad7f78522d982e0a98e08b"
+    },
+    {
+      "name": "sidebar",
+      "sha256": "8aace7ae8d38342087b498581cf486f8f144cca2006549f573d8cfeff84578be"
+    },
+    {
+      "name": "shell",
+      "sha256": "41b72582453f6508dca83792481afc7127b0f8bb6897286c61021492b1c6a906"
+    },
+    {
+      "name": "settings",
+      "sha256": "604aa5b13d8a286c1100f0311602aa07beb46cac234c58c5c753e8b6ad20d9bd"
+    }
+  ]
+}

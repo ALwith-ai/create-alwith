@@ -1,0 +1,14 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "extensions",
+  "description": "Application extension infrastructure for the main and settings windows",
+  "windows": [
+    "main",
+    "settings"
+  ],
+  "permissions": [
+    "extension:default",
+    "dialog:allow-message",
+    "dialog:allow-ask"
+  ]
+}

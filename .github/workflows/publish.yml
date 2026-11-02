@@ -1,0 +1,32 @@
+name: Publish
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: macos-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Require verified release locks and matching tag
+        run: |
+          test -f bun.lock
+          test -f template/bun.lock
+          test -f template/src-tauri/Cargo.lock
+          bun -e 'if (process.env.GITHUB_REF_NAME !== `v${(await Bun.file("package.json").json()).version}`) process.exit(1)'
+      - run: bun install --frozen-lockfile
+      - run: bun run check:source
+      - run: bun test
+      - run: npm publish --access public --provenance

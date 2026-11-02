@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "shell",
+  "title": "Shell",
+  "files": [
+    {
+      "path": "registry/source/src/layout/shell.tsx",
+      "content": "export { DesktopWorkspace as Shell } from \"@alwith/module-desktop-shell/react\"\n",
+      "type": "registry:file",
+      "target": "src/layout/shell.tsx"
+    }
+  ],
+  "type": "registry:block"
+}
