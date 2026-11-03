@@ -10,22 +10,27 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_alwith_desktop_shell::init("en"))
+        .plugin(alwith_desktop_shell::init("en"))
         .plugin(tauri_plugin_dialog::init())
         // Application extensions: packages under the app's data directory, the precompiled native
-        // implementation from resources/native (next to the auth library) while developing.
-        .plugin(alwith_extension::plugin::init_with_paths(None, native_development_directory()))
+        // implementation from resources/native while developing.
+        .plugin(alwith_extension::init(alwith_extension::Config {
+            root: None,
+            development_directory: native_development_directory(),
+        }))
         // Model providers (API keys, custom providers) and skill documents: module-chat's plugin over this app's Runtime.
-        .plugin(tauri_plugin_alwith_chat::init(tauri_plugin_alwith_chat::runtime_fn(|app| {
+        .plugin(alwith_chat::init(alwith_chat::runtime_fn(|app| {
             app.state::<runtime::RuntimeState>().current()
         })))
-        .plugin(alwith_module_store::tauri::init())
-        .plugin(alwith_auth_client::tauri::init(Some(
-            std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("resources/native")
-        )));
+        .plugin(alwith_store::init())
+        // ALwith account token refresh and the desktop Vibemon; its owner decision runs over this app's Runtime.
+        .plugin(alwith_auth::init(alwith_auth::Config {
+            development_directory: native_development_directory(),
+            vibemon: Some(alwith_auth::VibemonOwner::new(vibemon_owner)),
+        }));
     // Signed updates from GitHub Releases exist only when alwith.app.json declares `updates`; the updater
     // plugin rejects a configuration without a public key, so it is registered only then.
-    let builder = if tauri_plugin_alwith_desktop_shell::updates_configured(context.config()) {
+    let builder = if alwith_desktop_shell::updates_configured(context.config()) {
         builder.plugin(tauri_plugin_updater::Builder::new().build())
     } else {
         builder
@@ -34,7 +39,6 @@ pub fn run() {
     let builder = builder.plugin(tauri_plugin_hasgard::init());
     builder
         .manage(runtime::RuntimeState::default())
-        .manage(alwith_auth_client::pets::RuntimeAccess(pet_owner))
         .invoke_handler(tauri::generate_handler![
             runtime::runtime_start,
             runtime::runtime_send
@@ -60,7 +64,7 @@ fn native_development_directory() -> Option<std::path::PathBuf> {
     }
 }
 
-fn pet_owner(app: &tauri::AppHandle, session_id: String, owner: String) -> alwith_auth_client::pets::OwnerCheck {
+fn vibemon_owner(app: &tauri::AppHandle, session_id: String, owner: String) -> alwith_auth::OwnerCheck {
     let client = app.state::<runtime::RuntimeState>().current();
     Box::pin(async move {
         let states = client?.run_states().await.map_err(|error| error.to_string())?;

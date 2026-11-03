@@ -1,0 +1,26 @@
+[scenario]
+name = "Main window smoke (account mode: sign in first)"
+fail_fast = true
+
+[[step]]
+name = "Navigation is visible"
+action = "assert-visible"
+target = ".desktop-shell-navigation-header"
+
+[[step]]
+name = "Session navigation and screen switch are mounted"
+action = "assert-visible"
+target = ".desktop-shell-navigation-list"
+
+[[step]]
+name = "No collapsed chat surface"
+action = "eval"
+script = """
+(() => {
+  const root = document.querySelector('#root');
+  if (!root || root.getBoundingClientRect().width <= 0 || root.getBoundingClientRect().height <= 0) throw new Error('Application surface collapsed');
+  const editor = document.querySelector('textarea, [contenteditable="true"]');
+  if (!editor || editor.getBoundingClientRect().width <= 0) throw new Error('Chat composer missing or collapsed');
+  return 'PASS';
+})()
+"""

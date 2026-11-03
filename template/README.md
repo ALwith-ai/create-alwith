@@ -9,8 +9,8 @@ bun install --frozen-lockfile
 For the optional Fabric commands, install Python and Fabric:
 
 ```sh
-python3 -m pip install -r requirements-dev.txt
-fab u      # Update Bun and Cargo dependencies within declared version ranges
+uv tool install fabric
+fab u      # Update Bun and Cargo dependencies within declared ranges; report newer releases
 fab dev    # Run the desktop app with Hasgard enabled
 fab check  # Check frontend and native compilation without starting a chat
 fab build  # Build the desktop app and installer using local signing settings
@@ -40,3 +40,7 @@ Set these repository secrets before tagging:
 | `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | The key password; empty when the key has none |
 
 The tag must equal `v` plus the `version` in `alwith.app.json`; bump it and run `bun run app-config` first. The public key stays in `updates.pubkey`; generating a new key means every installed copy must reinstall once. To add updates to an existing app, create a key with `bun run tauri signer generate -w ~/.tauri/<name>.key`, put the `.pub` file's contents and your `owner/repo` into `updates`, and rerun `bun run app-config`.
+
+## Application tests
+
+Run `bun run test` for isolated application wiring tests, `bun run verify` for frontend gates, and `bun run verify:native` (also `fab check`) for staging, vendor signatures and native compilation. Tests are included in generated projects. See [testing and acceptance](docs/testing.md) for Hasgard scenarios, enabled-module checks and separately authorized live acceptance.

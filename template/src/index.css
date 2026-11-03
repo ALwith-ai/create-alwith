@@ -1,4 +1,4 @@
-@import "@alwith/module-auth/pets/styles.css";
+@import "@alwith/module-auth/vibemon/styles.css";
 @source "../node_modules/@alwith/module-auth/dist";
 @import "tailwindcss";
 @import "tw-animate-css";

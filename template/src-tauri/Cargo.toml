@@ -19,12 +19,12 @@ hasgard-testing = ["dep:tauri-plugin-hasgard"]
 tauri-build = { version = "3.0.0-alpha.4", features = [] }
 
 [dependencies]
-tauri-plugin-alwith-desktop-shell = { path = "../node_modules/@alwith/module-desktop-shell/rust" }
-alwith-api = { path = "../node_modules/@alwith/api/rust" }
-tauri-plugin-alwith-chat = { path = "../node_modules/@alwith/module-chat/rust" }
-alwith-module-store = { path = "../node_modules/@alwith/module-store/rust", features = ["tauri"] }
-alwith-auth-client = { path = "../node_modules/@alwith/module-auth/rust", features = ["pets"] }
-alwith-extension = { path = "../node_modules/@alwith/module-extension/rust", features = ["tauri", "native-http"] }
+alwith-desktop-shell = "0.6"
+alwith-api = "0.6"
+alwith-chat = "0.6"
+alwith-store = "0.6"
+alwith-auth = "0.6"
+alwith-extension = "0.6"
 log = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

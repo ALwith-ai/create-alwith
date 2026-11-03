@@ -2,14 +2,16 @@
 import { stageChatAdapter, stageEmojiData } from "@alwith/module-chat/stage"
 // Stages the minimal sidecar set Tauri bundles: alwith-runtime, bun, codex, codex-code-mode-host,
 // plus the codex-acp-v2 adapter bundle as a resource. Everything comes from installed npm packages.
-import { stageNative as stageNativeAuth } from "@alwith/native-auth/stage"
-import { stageNative as stageNativeExtension } from "@alwith/native-extension/stage"
+import { ensureIcons } from "@alwith/module-desktop-shell/build"
+import { stageNativeModule } from "@alwith/module-desktop-shell/stage"
 import { stageRuntime } from "@alwith/runtime/stage"
 import { $ } from "bun"
 import { chmodSync, copyFileSync, existsSync, mkdirSync, rmSync } from "node:fs"
 import { join, resolve } from "node:path"
 
 const root = resolve(import.meta.dirname, "..")
+// A fresh project has no bundle icons yet; tauri::generate_context! needs them before the first build.
+await ensureIcons(root)
 const binaries = join(root, "src-tauri/binaries")
 const resources = join(root, "src-tauri/resources")
 const licenses = join(resources, "licenses")
@@ -74,14 +76,14 @@ const emojiDirectory = join(root, "public/emojibase")
 stageEmojiData(emojiDirectory)
 console.log(`emojibase -> ${emojiDirectory}`)
 
-// 5. The precompiled application-extension implementation, verified by its package before copying.
+// 5. The precompiled module libraries from their installed @alwith/module-<module> packages, verified
+// (identity, ABI, checksum) before copying: extension for every app, auth with ALwith accounts.
+// ALwith libraries take the application identity; licence files stay plain resources.
 const nativeDirectory = join(resources, "native")
 rmSync(nativeDirectory, { recursive: true, force: true })
-const nativeExtension = stageNativeExtension(triple, nativeDirectory, licenses)
-if (process.env.APPLE_SIGNING_IDENTITY) await sign(nativeExtension)
-console.log(`native extension -> ${nativeExtension}`)
-
-// 6. The closed auth library that refreshes ALwith tokens, verified by its package before copying.
-const nativeAuth = stageNativeAuth(triple, nativeDirectory, licenses)
-if (process.env.APPLE_SIGNING_IDENTITY) await sign(nativeAuth)
-console.log(`native auth -> ${nativeAuth}`)
+for (const module of ["extension", "auth"]) {
+  for (const file of stageNativeModule(import.meta.url, module, triple, nativeDirectory, licenses)) {
+    if (file.signing === "resign" && process.env.APPLE_SIGNING_IDENTITY) await sign(file.path)
+  }
+  console.log(`native ${module} -> ${nativeDirectory}`)
+}

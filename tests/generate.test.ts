@@ -43,25 +43,29 @@ test("expands a complete chat preset offline and derives all brand configuration
   expect(
     await readFile(join(directory, "src/auth/auth-gate.tsx"), "utf8"),
   ).toContain("PlatformLogin");
-  expect(await readFile(join(directory, "src/auth/pets.ts"), "utf8")).toContain(
-    "configurePetApplication",
+  expect(await readFile(join(directory, "src/auth/vibemon.ts"), "utf8")).toContain(
+    "configureVibemonApplication",
   );
   expect(await readFile(join(directory, "src/vibemon.tsx"), "utf8")).toContain(
-    "PetWindow",
+    "VibemonWindow",
   );
   expect(
     await readFile(join(directory, "src/vibemon-bubble.tsx"), "utf8"),
-  ).toContain("PetQuickReply");
+  ).toContain("VibemonQuickReply");
   expect(
-    await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8"),
-  ).toContain('features = ["pets"]');
+    await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8"),
+  ).toContain("VibemonOwner::new(vibemon_owner)");
   const capabilities = JSON.parse(
     await readFile(
       join(directory, "src-tauri/capabilities/default.json"),
       "utf8",
     ),
   );
-  expect(capabilities.permissions).toContain("alwith-auth-client:pets");
+  expect(capabilities.permissions).toContain("alwith-auth:vibemon");
+  const cargo = await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8");
+  for (const plugin of ["alwith-auth", "alwith-chat", "alwith-store", "alwith-extension", "alwith-desktop-shell"]) expect(cargo).toMatch(new RegExp(`^${plugin} = "\\d+\\.\\d+"$`, "m"));
+  expect(cargo).not.toContain("node_modules");
+  expect(await readFile(join(directory, "scripts/stage.ts"), "utf8")).toContain('for (const module of ["extension", "auth"])');
   expect(
     await readFile(join(directory, "src-tauri/src/main.rs"), "utf8"),
   ).toContain("alwith_app::run");
@@ -218,14 +222,13 @@ test("bare chat removes account code, native plugins, permissions and direct dep
   for (const name of [
     "@alwith/module-auth",
     "@alwith/native-auth",
-    "@alwith/native-kit",
     "@tauri-apps/plugin-http",
     "@tauri-apps/plugin-os",
   ])
     expect(pkg.dependencies[name]).toBeUndefined();
   for (const path of [
     "src/auth/store.ts",
-    "src/auth/pets.ts",
+    "src/auth/vibemon.ts",
     "src/vibemon.tsx",
     "src/vibemon-bubble.tsx",
     "vibemon.html",
@@ -240,7 +243,7 @@ test("bare chat removes account code, native plugins, permissions and direct dep
     "vite.config.ts",
   ]) {
     expect(await readFile(join(directory, path), "utf8")).not.toMatch(
-      /module-auth|PetCenter|PetLounge|vibemon|auth\/pets/,
+      /module-auth|VibemonCenter|VibemonLounge|vibemon|auth\/vibemon/,
     );
   }
   for (const path of [
@@ -251,7 +254,7 @@ test("bare chat removes account code, native plugins, permissions and direct dep
     "scripts/stage.ts",
   ]) {
     expect(await readFile(join(directory, path), "utf8")).not.toMatch(
-      /AuthGate|logoutPlatform|usePlatformAuth|alwith_auth_client|stageNativeAuth/,
+      /AuthGate|logoutPlatform|usePlatformAuth|alwith_auth|VibemonOwner|"auth"\]/,
     );
   }
   const config = JSON.parse(
@@ -263,14 +266,17 @@ test("bare chat removes account code, native plugins, permissions and direct dep
   );
   expect(
     await readFile(join(directory, "src-tauri/Cargo.lock"), "utf8"),
-  ).not.toMatch(/alwith-auth-client/);
+  ).not.toMatch(/alwith-auth|alwith-auth-client/);
+  expect(await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8")).not.toContain("alwith-auth");
+  expect(await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8")).toContain(".plugin(alwith_store::init());");
+  expect(await readFile(join(directory, "scripts/stage.ts"), "utf8")).toContain('for (const module of ["extension"])');
   const capabilities = JSON.parse(
     await readFile(
       join(directory, "src-tauri/capabilities/default.json"),
       "utf8",
     ),
   );
-  expect(capabilities.permissions).not.toContain("alwith-auth-client:default");
+  expect(capabilities.permissions.filter((permission: string) => permission.startsWith("alwith-auth:"))).toEqual([]);
   expect(
     capabilities.permissions.every(
       (value: unknown) => typeof value === "string",
@@ -350,7 +356,8 @@ for (const auth of ["alwith", "none"] as const) {
     const pkg = await Bun.file(join(directory, "package.json")).json();
     expect(pkg.optionalDependencies["@openai/codex-win32-x64"]).toBe("npm:@openai/codex@win32-x64");
     for (const group of [pkg.dependencies, pkg.devDependencies, pkg.optionalDependencies]) {
-      for (const version of Object.values(group)) expect(version).not.toMatch(/^[~^]?\d+\.\d+\.\d+$/);
+      // Ranges, never exact pins: npm declarations use three-part caret ranges such as ^0.6.0.
+      for (const version of Object.values(group)) expect(version).not.toMatch(/^\d+\.\d+\.\d+$/);
     }
     expect(pkg.optionalDependencies["@oven/bun-windows-x64-baseline"]).toBe(pkg.optionalDependencies["@oven/bun-darwin-aarch64"]);
     expect(await Bun.file(join(directory, "src-tauri/Cargo.toml")).text()).toContain('tauri-plugin-hasgard = { version = "0.6", optional = true }');

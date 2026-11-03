@@ -19,9 +19,9 @@
           "target": "src/auth/store.ts"
         },
         {
-          "path": "registry/source/src/auth/pets.ts",
+          "path": "registry/source/src/auth/vibemon.ts",
           "type": "registry:file",
-          "target": "src/auth/pets.ts"
+          "target": "src/auth/vibemon.ts"
         }
       ]
     },

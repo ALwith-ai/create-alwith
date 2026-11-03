@@ -75,7 +75,7 @@ try {
     if (!values.yes && !machine && process.stdin.isTTY && Object.values(fields).some(v => !v)) {
       const prompt = createInterface({input: process.stdin, output: process.stdout});
       try {
-        for (const [key, question] of Object.entries({directory: "Output directory", name: "Package name", productName: "Application name", identifier: "Bundle identifier (e.g. com.example.myapp)", auth: "ALwith account with pets, or bare chat (alwith/none)"})) {
+        for (const [key, question] of Object.entries({directory: "Output directory", name: "Package name", productName: "Application name", identifier: "Bundle identifier (e.g. com.example.myapp)", auth: "ALwith account with Vibemon, or bare chat (alwith/none)"})) {
           const field = key as keyof typeof fields;
           if (!fields[field]) fields[field] = (await prompt.question(`${question}: `, {signal: controller.signal})).trim();
         }

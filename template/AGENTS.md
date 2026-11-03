@@ -13,6 +13,6 @@ Preserve vendor-signed Codex and code-mode-host binaries byte-for-byte during st
 
 ## Shared defaults
 
-The generated app starts from the shared desktop defaults. Template wiring must not override module-owned theme, geometry, pet placement or window behavior. Fix missing defaults in the owning module; only add app-specific overrides after an explicit customization request.
+The generated app starts from the shared desktop defaults. Template wiring must not override module-owned theme, geometry, Vibemon placement or window behavior. Fix missing defaults in the owning module; only add app-specific overrides after an explicit customization request.
 
-Dependency declarations must use version ranges, not exact patch pins. Stable npm dependencies use `^major.minor`; Cargo uses compatible major/minor ranges. Lockfiles retain exact resolved versions. Prerelease identifiers must remain valid and platform-specific binary aliases must select the correct platform.
+Dependency declarations must use version ranges, not exact patch pins. npm dependencies use a three-part caret range (`^major.minor.patch`, for example `^0.6.0`); Cargo uses a two-part compatible range (`"0.6"`). Lockfiles retain exact resolved versions. Prerelease identifiers must remain valid and platform-specific binary aliases must select the correct platform.

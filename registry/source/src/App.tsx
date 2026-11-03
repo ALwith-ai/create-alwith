@@ -1,6 +1,6 @@
 import { type DesktopScreen, DesktopHeader } from "@alwith/module-desktop-shell/react"
-import {PetLounge} from "@alwith/module-auth/pets/react"
-import {initializeVibemonMain, updateMainPetSurface, requestPet} from "./auth/pets"
+import {VibemonLounge} from "@alwith/module-auth/vibemon/react"
+import {initializeVibemonMain, updateMainVibemonSurface, requestVibemon} from "./auth/vibemon"
 import { openDesktopSettings } from "@alwith/module-desktop-shell/native"
 import app from "../alwith.app.json"
 import { onDesktopMenu, onDesktopNewChat } from "@alwith/module-desktop-shell/native"
@@ -74,8 +74,8 @@ export function App() {
   const connectionError = useClient((state) => state.connectionError)
   const [screen, setScreen] = useState<DesktopScreen>("main")
   const [region, setRegion] = useState("chat")
-  const [leadingPage, setLeadingPage] = useState<LeadingPage>("pets")
-  const [petsReady, setPetsReady] = useState(false)
+  const [leadingPage, setLeadingPage] = useState<LeadingPage>("vibemon")
+  const [vibemonReady, setVibemonReady] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const session = useSession(selected)
@@ -91,7 +91,15 @@ export function App() {
     setRegion("workspace")
     setError(null)
   }, [])
-  const report = (caught: unknown) => setError(caught instanceof Error ? caught.message : String(caught))
+  // Native commands reject with a structured `{ code, message }`, not an Error; show its message, never "[object Object]".
+  const report = (caught: unknown) =>
+    setError(
+      caught instanceof Error
+        ? caught.message
+        : typeof caught === "object" && caught !== null && "message" in caught && typeof caught.message === "string"
+          ? caught.message
+          : String(caught)
+    )
 
   useEffect(() => {
     let cancelled = false
@@ -122,14 +130,14 @@ export function App() {
       }
     }
     const onError = (event: Event) => report((event as CustomEvent).detail)
-    window.addEventListener("pet:open-chat", onOpen)
-    window.addEventListener("pet:error", onError)
-    void initializeVibemonMain().then(() => { if (active) setPetsReady(true) }).catch(report)
-    return () => { active = false; window.removeEventListener("pet:open-chat", onOpen); window.removeEventListener("pet:error", onError) }
+    window.addEventListener("vibemon:open-chat", onOpen)
+    window.addEventListener("vibemon:error", onError)
+    void initializeVibemonMain().then(() => { if (active) setVibemonReady(true) }).catch(report)
+    return () => { active = false; window.removeEventListener("vibemon:open-chat", onOpen); window.removeEventListener("vibemon:error", onError) }
   }, [show])
   useEffect(() => {
-    if (petsReady) void updateMainPetSurface(selected, region === "chat").catch(report)
-  }, [petsReady, selected, region])
+    if (vibemonReady) void updateMainVibemonSurface(selected, region === "chat").catch(report)
+  }, [vibemonReady, selected, region])
 
   // The settings window shows the Codex account and signs in or out through this window's connection.
   useEffect(() => serveSettingsBridge(codexSettingsBridge(client), { listen, emitTo }), [])
@@ -185,44 +193,51 @@ export function App() {
       <CollectionHostProvider host={{ emojibaseUrl: "/emojibase" }}>
       <CollectionProvider store={collections}>
       <Shell
-        leading={<LeadingScreen page={leadingPage} onPageChange={setLeadingPage} petsReady={petsReady} cwd={session?.cwd ?? null} />}
+        leading={<LeadingScreen page={leadingPage} onPageChange={setLeadingPage} vibemonReady={vibemonReady} cwd={session?.cwd ?? null} />}
+        navigation={<Navigation selectedId={selected} screen={screen} onSwitchScreen={() => setScreen(screen === "main" ? "leading" : "main")} onNew={() => void newChat()} onNewInCollection={(collectionId) => void newChat(undefined, collectionId)} onSelect={(row) => void select(row)} onSettings={() => { void openDesktopSettings(t("settings")).catch(report) }} onVibemon={() => { setLeadingPage("vibemon"); setScreen("leading") }} onShowVibemon={() => { void requestVibemon("open-vibemon").then(result => { if (result === "unavailable") { setLeadingPage("vibemon"); setScreen("leading") } }).catch(report) }} vibemonReady={vibemonReady} />}
+        panes={[
+          {
+            id: "chat",
+            title: t("chat"),
+            children: (
+              <div className="main-chat-surface flex min-h-0 flex-1 flex-col">
+              <ConversationProvider host={host} client={client}>
+                <ConnectionNotice connection={connection} error={connectionError} onReconnect={() => { reboot().then(show).catch(report) }} />
+                {globalInlineActions.length > 0 && (
+                  <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-6 pt-12">
+                    {globalInlineActions.map((action) => <ActionCard key={action.id} action={action} />)}
+                  </div>
+                )}
+                {globalForms[0] !== undefined && <ElicitationForm action={globalForms[0]} total={globalForms.length} />}
+              </ConversationProvider>
+              {session ? (
+                <ConversationView
+                  key={session.id}
+                  session={session}
+                  client={client}
+                  host={host}
+                  header={header}
+                  composer={
+                    <Composer
+                      session={session}
+                      inputHeader={
+                        draft ? <DraftProjectPicker cwd={session.cwd} onChange={(cwd) => void changeProject(cwd)} /> : undefined
+                      }
+                    />
+                  }
+                />
+              ) : (
+                header
+              )}
+              </div>
+            )
+          }
+        ]}
+        trailing={vibemonReady && <VibemonLounge active={region === "trailing"} onOpenCenter={() => setScreen("leading")} onSend={async (vibemonId, dropCenter) => { await requestVibemon("open-from-lounge", {vibemonId, dropCenter}) }} />}
         screen={screen}
         onScreenChange={setScreen}
         onRegionChange={setRegion}
-        trailing={petsReady && <PetLounge active={region === "trailing"} onOpenCenter={() => setScreen("leading")} onSend={async (petId, dropCenter) => { await requestPet("open-from-lounge", {petId, dropCenter}) }} />}
-        navigation={<Navigation selectedId={selected} screen={screen} onSwitchScreen={() => setScreen(screen === "main" ? "leading" : "main")} onNew={() => void newChat()} onNewInCollection={(collectionId) => void newChat(undefined, collectionId)} onSelect={(row) => void select(row)} onSettings={() => { void openDesktopSettings(t("settings")).catch(report) }} onPets={() => { setLeadingPage("pets"); setScreen("leading") }} onShowPet={() => { void requestPet("open-pet").then(result => { if (result === "unavailable") { setLeadingPage("pets"); setScreen("leading") } }).catch(report) }} petsReady={petsReady} />}
-      >
-        <div className="main-chat-surface flex min-h-0 flex-1 flex-col">
-        <ConversationProvider host={host} client={client}>
-          <ConnectionNotice connection={connection} error={connectionError} onReconnect={() => { reboot().then(show).catch(report) }} />
-          {globalInlineActions.length > 0 && (
-            <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 px-6 pt-12">
-              {globalInlineActions.map((action) => <ActionCard key={action.id} action={action} />)}
-            </div>
-          )}
-          {globalForms[0] !== undefined && <ElicitationForm action={globalForms[0]} total={globalForms.length} />}
-        </ConversationProvider>
-        {session ? (
-          <ConversationView
-            key={session.id}
-            session={session}
-            client={client}
-            host={host}
-            header={header}
-            composer={
-              <Composer
-                session={session}
-                inputHeader={
-                  draft ? <DraftProjectPicker cwd={session.cwd} onChange={(cwd) => void changeProject(cwd)} /> : undefined
-                }
-              />
-            }
-          />
-        ) : (
-          header
-        )}
-        </div>
-      </Shell>
+      />
       </CollectionProvider>
       </CollectionHostProvider>
     </SessionListProvider>

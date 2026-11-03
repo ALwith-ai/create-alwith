@@ -6,7 +6,7 @@ import { CodexMarkdownRenderer } from "@alwith/module-chat/markdown"
 import { PatchView } from "@alwith/module-chat/patch-view"
 import { TerminalOutput } from "@alwith/module-chat/terminal-output"
 import { chooseFolder, onDesktopMenu } from "@alwith/module-desktop-shell/native"
-import { convertFileSrc, invoke } from "@tauri-apps/api/core"
+import { convertFileSrc } from "@tauri-apps/api/core"
 import { openPath, openUrl, revealItemsInDir } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
 import { useMemo } from "react"
@@ -72,7 +72,7 @@ export function usePluginsHost(): PluginsHost {
       openLink,
       assetUrl: convertFileSrc,
       // SKILL.md through module-chat's plugin: the Codex home plus the skill folders of known projects.
-      readFile: (path) => readSkillDocument(invoke, path, [...new Set(client.state.sessionList.map((row) => row.cwd))]),
+      readFile: (path) => readSkillDocument(path, [...new Set(client.state.sessionList.map((row) => row.cwd))]),
       openPath,
       revealPath: revealItemsInDir,
       copyText: (text) => navigator.clipboard.writeText(text),

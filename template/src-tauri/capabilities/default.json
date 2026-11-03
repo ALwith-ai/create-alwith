@@ -26,9 +26,9 @@
         }
       ]
     },
-    "alwith-module-store:default",
-    "alwith-auth-client:default",
-    "alwith-auth-client:pets",
+    "alwith-store:default",
+    "alwith-auth:default",
+    "alwith-auth:vibemon",
     "core:app:allow-set-app-theme",
     "core:webview:allow-create-webview-window",
     "core:window:allow-show",

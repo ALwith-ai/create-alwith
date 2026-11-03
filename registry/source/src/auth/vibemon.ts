@@ -1,4 +1,4 @@
-import {configurePetApplication, initializeVibemonMain, updateMainPetSurface, requestPet} from "@alwith/module-auth/pets/tauri"
+import {configureVibemonApplication, initializeVibemonMain, updateMainVibemonSurface, requestVibemon} from "@alwith/module-auth/vibemon/tauri"
 import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow"
 import {openUrl} from "@tauri-apps/plugin-opener"
 import {client} from "../client"
@@ -7,7 +7,7 @@ import {openStore} from "../store"
 import i18n from "../i18n"
 import {authClient, API_BASE_URL, platformApiRequest, usePlatformAuth} from "./store"
 
-configurePetApplication({
+configureVibemonApplication({
   auth: usePlatformAuth,
   apiBaseUrl: API_BASE_URL,
   storage: openStore("vibemon"),
@@ -17,7 +17,7 @@ configurePetApplication({
   agentId: CODEX_AGENT_ID,
   markRead: id => runtimePort().markRead(id, client.state.runStates[id]?.version ?? null),
   async openChat(id) {
-    window.dispatchEvent(new CustomEvent("pet:open-chat", {detail: id}))
+    window.dispatchEvent(new CustomEvent("vibemon:open-chat", {detail: id}))
     const main = getCurrentWebviewWindow()
     await main.show()
     await main.setFocus()
@@ -30,6 +30,6 @@ configurePetApplication({
     await openUrl(url.href)
   },
   translate: (key, options) => String(i18n.t(key, options as never)),
-  onError: error => window.dispatchEvent(new CustomEvent("pet:error", {detail: error instanceof Error ? error.message : String(error)}))
+  onError: error => window.dispatchEvent(new CustomEvent("vibemon:error", {detail: error instanceof Error ? error.message : String(error)}))
 })
-export {initializeVibemonMain, updateMainPetSurface, requestPet}
+export {initializeVibemonMain, updateMainVibemonSurface, requestVibemon}

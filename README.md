@@ -36,14 +36,13 @@ Runtime manages agents. Codex ACP owns project context and conversations; API su
 
 ## Generated project commands
 
-The generated project includes `fabfile.py` and `requirements-dev.txt`. After installing
-its Bun dependencies, run `python3 -m pip install -r requirements-dev.txt` to enable
+The generated project includes `fabfile.py`. Install Fabric with `uv tool install fabric` to enable
 `fab dev` (alias `fab tauri`), `fab check`, `fab build`, and `fab upgrade` (alias `fab u`). Fabric wraps the existing
 Bun/Tauri workflow and is optional; each generated project includes its own README.
 
 ## Development
 
-Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun test` exercise offline project generation.
+Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun run test` exercise offline project generation. The test command is scoped to generator tests; generated applications receive their own `tests/`, `bun run test`, `bun run verify` and `bun run verify:native`. See `template/docs/testing.md` for test boundaries and desktop/live acceptance.
 
 `registry.json` defines the default login, chat, sidebar, shell and settings blocks. `bun run build:registry` uses shadcn 4.22.1 and records SHA-256 hashes. The generator uses those same immutable snapshots. Upgrade or replace pages through the standard shadcn workflow.
 

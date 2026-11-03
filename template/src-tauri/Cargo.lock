@@ -63,8 +63,8 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
- "tauri-plugin-alwith-chat",
- "tauri-plugin-alwith-desktop-shell",
+ "alwith-chat",
+ "alwith-desktop-shell",
  "tauri-plugin-dialog",
  "tauri-plugin-hasgard",
  "tauri-plugin-http",
@@ -4596,7 +4596,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-alwith-chat"
+name = "alwith-chat"
 version = "0.1.0"
 dependencies = [
  "alwith-api",
@@ -4615,7 +4615,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-alwith-desktop-shell"
+name = "alwith-desktop-shell"
 version = "0.5.2"
 dependencies = [
  "atlas-tauri",

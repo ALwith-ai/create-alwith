@@ -1,4 +1,4 @@
-import { PetCenter } from "@alwith/module-auth/pets/react"
+import { VibemonCenter } from "@alwith/module-auth/vibemon/react"
 import { ArchivedSessions, useSessionListHost } from "@alwith/module-chat/session-list"
 import { Pane, PluginsPage, PluginsProvider, toolboxContentClassName } from "@alwith/module-chat/plugins"
 import { DesktopLeading, LeadingNavigation, type LeadingNavigationItem } from "@alwith/module-desktop-shell/react"
@@ -15,13 +15,13 @@ import { client } from "../client"
 import { extensions } from "../extensions"
 import "@alwith/module-chat/plugins.css"
 
-export type LeadingPage = "pets" | "plugins" | "extensions" | "archives"
+export type LeadingPage = "vibemon" | "plugins" | "extensions" | "archives"
 
-/** The screen to the left of the chat: U's rail (pets, toolbox, archives, installed extensions), then the page it selected. */
-export function LeadingScreen({ page, onPageChange, petsReady, cwd }: {
+/** The screen to the left of the chat: U's rail (Vibemon, toolbox, archives, installed extensions), then the page it selected. */
+export function LeadingScreen({ page, onPageChange, vibemonReady, cwd }: {
   page: LeadingPage
   onPageChange: (page: LeadingPage) => void
-  petsReady: boolean
+  vibemonReady: boolean
   /** The shown conversation's project; the toolbox lists that project's skills. */
   cwd: string | null
 }) {
@@ -44,7 +44,7 @@ export function LeadingScreen({ page, onPageChange, petsReady, cwd }: {
     onPageChange("extensions")
   }
   const items: LeadingNavigationItem[] = [
-    { id: "pets", label: t("pets"), icon: PawPrintIcon, onClick: () => onPageChange("pets") },
+    { id: "vibemon", label: t("vibemon"), icon: PawPrintIcon, onClick: () => onPageChange("vibemon") },
     { id: "plugins", label: chat("plugins.catalog.customize"), icon: LayoutGridIcon, onClick: () => openToolbox("plugins") },
     { id: "archives", label: chat("sessionList.archives.title"), icon: ArchiveIcon, onClick: () => onPageChange("archives") }
   ]
@@ -76,7 +76,7 @@ export function LeadingScreen({ page, onPageChange, petsReady, cwd }: {
     >
       <DesktopLeading navigation={navigation}>
         {page === "archives" && <ArchivedSessions />}
-        {page === "pets" && petsReady && <PetCenter />}
+        {page === "vibemon" && vibemonReady && <VibemonCenter />}
         {toolboxVisited && (
           <div className={toolbox && extensionView === null ? "flex min-h-0 flex-1 flex-col" : "hidden"}>
             <PluginsProvider host={pluginsHost} client={client}>

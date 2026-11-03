@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -9,9 +13,21 @@
     "noEmit": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "types": ["bun"],
+    "types": [
+      "bun"
+    ],
     "resolveJsonModule": true,
-    "paths": { "@/*": ["./src/*", "./node_modules/@nyssance/shadcn/dist/vega/*"] }
+    "paths": {
+      "@/*": [
+        "./src/*",
+        "./node_modules/@nyssance/shadcn/dist/vega/*"
+      ]
+    }
   },
-  "include": ["src", "scripts", "vite.config.ts"]
+  "include": [
+    "src",
+    "scripts",
+    "vite.config.ts",
+    "tests/**/*.test.ts"
+  ]
 }

@@ -14,7 +14,7 @@ The **Activity** tab shows what is running right now: the conversation you are l
 
 ## Account
 
-Your account menu at the bottom opens settings, switches the language and signs out. Pets, when enabled for your account, live on the screen to the left.
+Your account menu at the bottom opens settings, switches the language and signs out. Vibemon, when enabled for your account, lives on the screen to the left.
 
 ---
 
@@ -34,4 +34,4 @@ Your account menu at the bottom opens settings, switches the language and signs 
 
 ## 账号
 
-底部的账号菜单可以打开设置、切换语言和退出登录。账号启用了宠物时，宠物住在左边那一屏。
+底部的账号菜单可以打开设置、切换语言和退出登录。账号启用了 Vibemon 时，它住在左边那一屏。

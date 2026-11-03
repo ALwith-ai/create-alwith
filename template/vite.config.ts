@@ -9,7 +9,7 @@ const host = process.env.TAURI_DEV_HOST
 export default defineConfig({
   plugins: [shadcn({ style: "vega" }), react(), tailwindcss(), desktopShellPages()],
   clearScreen: false,
-  build: {rollupOptions: {input: {main: "index.html", settings: "settings.html", guide: "guide.html", pet: "vibemon.html", bubble: "vibemon-bubble.html"}}},
+  build: {rollupOptions: {input: {main: "index.html", settings: "settings.html", guide: "guide.html", vibemon: "vibemon.html", bubble: "vibemon-bubble.html"}}},
   // module-chat spawns Web Workers through `new URL("@alwith/module-chat/*.worker", import.meta.url)`;
   // Vite's dependency pre-bundling breaks those URLs, so serve these ESM packages directly (as U does).
   // Their CommonJS dependencies (Base UI's store shim, diff2html for patches) still need pre-bundling (G11).

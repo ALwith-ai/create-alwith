@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 // Independence gate (plan "核心矛盾与约束"): nothing may depend on the maintainer's workspace or
-// ALwith private sources. Allowed: Cargo `path` into node_modules/@alwith/*/rust whose real path
-// stays inside this project's node_modules. Checked: manifests, lockfiles, scripts, env files.
-import { realpathSync, existsSync, readFileSync, readdirSync, statSync } from "node:fs"
+// ALwith private sources. Cargo dependencies, module plugins included, come from the registry by
+// version. Checked: manifests, lockfiles, scripts, env files.
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs"
 import { join, resolve } from "node:path"
 
 const root = resolve(import.meta.dirname, "..")
@@ -29,17 +29,12 @@ const files: string[] = []
 walk(root, files)
 for (const file of files) scan(file)
 
-// Cargo path dependencies must resolve inside node_modules (no symlink escape).
+// Cargo dependencies come from the registry by version; module plugins are never located through
+// node_modules or a checkout. The only `path` is `[[bin]] path = "src/main.rs"`, our own file.
 const cargo = readFileSync(join(root, "src-tauri/Cargo.toml"), "utf8")
-for (const match of cargo.matchAll(/path\s*=\s*"([^"]+)"/g)) {
-  const target = resolve(root, "src-tauri", match[1])
-  const nodeModules = realpathSync(join(root, "node_modules"))
-  // `[[bin]] path = "src/main.rs"` names our own file, not a dependency.
-  if (realpathSync(resolve(root, "src-tauri")) === realpathSync(resolve(target, "..", "..")) && !match[1].includes("node_modules")) continue
-  if (!existsSync(target)) failures.push(`Cargo path missing: ${match[1]}`)
-  else if (!realpathSync(target).startsWith(nodeModules + "/"))
-    failures.push(`Cargo path escapes node_modules: ${match[1]} -> ${realpathSync(target)}`)
-}
+for (const match of cargo.matchAll(/^(\S+)\s*=\s*\{[^}\n]*\b(path|git)\s*=\s*"([^"]+)"/gm))
+  failures.push(`Cargo dependency ${match[1]} uses ${match[2]} = "${match[3]}"; depend on a registry version`)
+if (/^\[patch\./m.test(cargo)) failures.push("Cargo.toml must not commit a [patch] section")
 // Cargo.lock: every source must be a registry, not a path outside node_modules.
 const lock = join(root, "src-tauri/Cargo.lock")
 if (existsSync(lock)) {
@@ -52,7 +47,7 @@ const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"))
 for (const section of ["dependencies", "devDependencies", "optionalDependencies"]) {
   for (const [name, version] of Object.entries(pkg[section] ?? {}) as [string, string][]) {
     if (name.startsWith("@alwith/") && !/^\^\d+\.\d+\.\d+$/.test(version))
-      failures.push(`${name} must be a caret range on a registry version, got ${version}`)
+      failures.push(`${name} must be a three-part caret range (^major.minor.patch), got ${version}`)
   }
 }
 if (failures.length) {

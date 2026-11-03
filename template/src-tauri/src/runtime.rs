@@ -117,8 +117,8 @@ pub async fn runtime_start(
     let mut events = client.events();
     *state.client.lock().unwrap() = Some(Arc::clone(&client));
     // A fresh Runtime knows no provider configuration: forget what the previous one applied and apply the saved keys.
-    app.state::<tauri_plugin_alwith_chat::Providers>().reset().await;
-    tauri_plugin_alwith_chat::schedule_apply(&app);
+    app.state::<alwith_chat::Providers>().reset().await;
+    alwith_chat::schedule_apply(&app);
     let identity = Arc::downgrade(&client);
     tauri::async_runtime::spawn(async move {
         'events: while let Some(first) = events.recv().await {
@@ -149,13 +149,13 @@ pub async fn runtime_start(
                         if let alwith_api::RuntimeEvent::Exit { agent_id } = &event {
                             state.initialized.lock().unwrap().remove(agent_id);
                             // Codex restarts without its provider configuration.
-                            if agent_id == tauri_plugin_alwith_chat::MAIN_AGENT {
-                                app.state::<tauri_plugin_alwith_chat::Providers>().reset().await;
+                            if agent_id == alwith_chat::MAIN_AGENT {
+                                app.state::<alwith_chat::Providers>().reset().await;
                             }
                         }
                         // Sessions went idle: a provider change held back for a busy session can apply now.
                         if matches!(&event, alwith_api::RuntimeEvent::RunStates { .. }) {
-                            tauri_plugin_alwith_chat::schedule_apply(&app);
+                            alwith_chat::schedule_apply(&app);
                         }
                         let text = serde_json::to_value(event).expect("serialize Runtime event").to_string();
                         // Diagnostics only. Never slice by byte index: a multi-byte character at the cut

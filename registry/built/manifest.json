@@ -2,15 +2,15 @@
   "items": [
     {
       "name": "login",
-      "sha256": "e187278ab8ed4bad0a49a857c6d5b4808bed7c2972d7a187fa45aa5fb31f8b90"
+      "sha256": "7631aafe4753ba85b78d5a4fd538f97e2fc5d1c00961b8719002780f12ff571e"
     },
     {
       "name": "chat",
-      "sha256": "f9bdd7815758bea6a01f976c7fdbe2c961b554c84dad7f78522d982e0a98e08b"
+      "sha256": "572f27f0ae71af02d63a19b9f1d5dbb440df2f89a194a596fbf4e086b317d518"
     },
     {
       "name": "sidebar",
-      "sha256": "8aace7ae8d38342087b498581cf486f8f144cca2006549f573d8cfeff84578be"
+      "sha256": "3fd3511775fd5be6d8cac2b5911f04d041ae5d82f36c0873275dd9621eef4e48"
     },
     {
       "name": "shell",

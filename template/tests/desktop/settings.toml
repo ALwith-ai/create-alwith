@@ -1,0 +1,25 @@
+[scenario]
+name = "Independent settings window smoke"
+fail_fast = true
+
+[[step]]
+name = "Settings layout is visible"
+action = "assert-visible"
+target = ".settings-window"
+
+[[step]]
+name = "Settings content is visible"
+action = "assert-visible"
+target = ".settings-content"
+
+[[step]]
+name = "Navigation has an active section and usable controls"
+action = "eval"
+script = """
+(() => {
+  if (!document.querySelector('.settings-window button[data-active]')) throw new Error('No active settings section');
+  const controls = document.querySelectorAll('.settings-window button');
+  if (controls.length < 4) throw new Error('Expected general, appearance, providers and about sections');
+  return 'PASS';
+})()
+"""
