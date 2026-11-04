@@ -16,3 +16,5 @@ Preserve vendor-signed Codex and code-mode-host binaries byte-for-byte during st
 The generated app starts from the shared desktop defaults. Template wiring must not override module-owned theme, geometry, Vibemon placement or window behavior. Fix missing defaults in the owning module; only add app-specific overrides after an explicit customization request.
 
 Dependency declarations must use version ranges, not exact patch pins. npm dependencies use a three-part caret range (`^major.minor.patch`, for example `^0.6.0`); Cargo uses a two-part compatible range (`"0.6"`). Lockfiles retain exact resolved versions. Prerelease identifiers must remain valid and platform-specific binary aliases must select the correct platform.
+
+The default shell includes both @nyssance/shadcn and @nyssance/reui, even when no page uses ReUI yet. Keep their direct dependencies, shared ReUI Vite resolver, TypeScript fallback paths and Tailwind source scanning. Consume ReUI from the package; do not copy registry sources into the app.

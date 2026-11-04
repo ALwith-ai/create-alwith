@@ -22,6 +22,7 @@
   "menuColor": "default",
   "menuAccent": "subtle",
   "registries": {
-    "@alwith": "https://cdn.jsdelivr.net/npm/create-alwith@0.1.0/registry/built/{name}.json"
+    "@alwith": "https://cdn.jsdelivr.net/npm/create-alwith@0.1.0/registry/built/{name}.json",
+    "@reui": "https://reui.io/r/{style}/{name}.json"
   }
 }
