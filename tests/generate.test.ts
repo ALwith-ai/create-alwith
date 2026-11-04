@@ -319,6 +319,8 @@ test("updates write a key pair outside the project and configure the GitHub rele
     pubkey: config.updates.pubkey,
     endpoints: ["https://github.com/example/my-buddy/releases/latest/download/latest.json"],
     requireSignedVersion: true,
+    // desktop-shell installs Windows updates without the installer wizard.
+    windows: { installMode: "passive" },
   });
   expect(tauri.bundle.createUpdaterArtifacts).toBeUndefined();
   expect(await readFile(join(directory, ".github/workflows/release.yml"), "utf8")).toContain('--config \'{"bundle":{"createUpdaterArtifacts":true}}\'');
