@@ -36,7 +36,7 @@
         "zustand": "^5.1.0",
       },
       "devDependencies": {
-        "@nyssance/tsconfig": "^0.1.0",
+        "@nyssance/tsconfig": "^0.1.2",
         "@openai/codex": "^0.169.0",
         "@tauri-apps/cli": "^3.0.0-alpha.6",
         "@types/bun": "^1.4.4",
@@ -201,7 +201,7 @@
 
     "@nyssance/shadcn": ["@nyssance/shadcn@4.23.4", "", { "dependencies": { "@base-ui/react": "^1.9.0", "@shadcn/react": "^0.3.1", "class-variance-authority": "^0.7.1", "cmdk": "^1.1.1", "cn": "^0.5.1", "embla-carousel-react": "^8.6.0", "input-otp": "^1.5.0", "lucide-react": "^1.66.0", "next-themes": "^0.4.6", "react-day-picker": "^10.0.2", "react-resizable-panels": "^4.16.0", "recharts": "3.8.0", "shiki": "^4.5.0", "sonner": "^2.0.8" }, "peerDependencies": { "react": "^19.0.0", "react-dom": "^19.0.0", "vite": ">=8" }, "optionalPeers": ["vite"] }, "sha512-pdqPvm9SkSD6tmbyFPsnaYo+9dj/9AkabQtGnCam5b0tmABMLnAqP5jBducAV5T/iItflMFPcgrA7DE0/69yqg=="],
 
-    "@nyssance/tsconfig": ["@nyssance/tsconfig@0.1.0", "", {}, "sha512-tLXTdPG1MehZI0kc3ZA37KYLp9az9ktUI/SKMjO+DHdqlgzsY2yHcSIG0yE8c2nfjqD0bb8ulOLqJkun1IKxTQ=="],
+    "@nyssance/tsconfig": ["@nyssance/tsconfig@0.1.2", "", {}, "sha512-BQ0PzHmJEQJQ0oQ+2sVEAsxzz5LEcq3kPKVcXMg1JJxt219C24wQab6z9FuC/JJzyM6XIQQpYLNU3UhvNL3hfA=="],
 
     "@openai/codex": ["@openai/codex@0.169.0", "https://registry.npmmirror.com/@openai/codex/-/codex-0.169.0.tgz", { "optionalDependencies": { "@openai/codex-darwin-arm64": "npm:@openai/codex@0.169.0-darwin-arm64", "@openai/codex-darwin-x64": "npm:@openai/codex@0.169.0-darwin-x64", "@openai/codex-linux-arm64": "npm:@openai/codex@0.169.0-linux-arm64", "@openai/codex-linux-x64": "npm:@openai/codex@0.169.0-linux-x64", "@openai/codex-win32-arm64": "npm:@openai/codex@0.169.0-win32-arm64", "@openai/codex-win32-x64": "npm:@openai/codex@0.169.0-win32-x64" }, "bin": { "codex": "bin/codex.js" } }, "sha512-KhzYlkKPxoNssR8CEm45IjqnFWn7UtlF4CiD3tOJPea51xBs7MaHy0UQG9GSbCqk6Lrjn5QdJDV0QD1/FgWlGw=="],
 

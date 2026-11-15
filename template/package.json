@@ -52,7 +52,7 @@
     "sonner": "^2.0.8"
   },
   "devDependencies": {
-    "@nyssance/tsconfig": "^0.1.0",
+    "@nyssance/tsconfig": "^0.1.2",
     "@openai/codex": "^0.169.0",
     "@tauri-apps/cli": "^3.0.0-alpha.6",
     "@types/bun": "^1.4.4",
