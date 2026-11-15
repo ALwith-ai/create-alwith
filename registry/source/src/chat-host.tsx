@@ -5,7 +5,7 @@ import { type PluginsHost, readSkillDocument } from "@alwith/module-chat/plugins
 import { CodexMarkdownRenderer } from "@alwith/module-chat/markdown"
 import { PatchView } from "@alwith/module-chat/patch-view"
 import { TerminalOutput } from "@alwith/module-chat/terminal-output"
-import { chooseFolder, onDesktopMenu } from "@alwith/module-desktop-shell/native"
+import { chooseFolder, onDesktopMenu, openDesktopSettings } from "@alwith/module-desktop-shell/native"
 import { convertFileSrc } from "@tauri-apps/api/core"
 import { openPath, openUrl, revealItemsInDir } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
@@ -44,6 +44,7 @@ export function useChatHost(report: (message: string) => void): ConversationHost
       openImage: openLink,
       chooseFolder,
       subscribeSearch,
+      openSettings: () => openDesktopSettings(i18n.t("settings")),
       Output: TerminalOutput,
       Patch: ({ patch }) => <PatchView patch={patch} theme={theme} />,
       Markdown: ({ text, streaming }) => (

@@ -4,7 +4,8 @@ import {initializeVibemonMain, updateMainVibemonSurface, requestVibemon} from ".
 import { openDesktopSettings } from "@alwith/module-desktop-shell/native"
 import app from "../alwith.app.json"
 import { onDesktopMenu, onDesktopNewChat } from "@alwith/module-desktop-shell/native"
-import { ActionCard, Composer, ConnectionNotice, ConversationProvider, ConversationView, DraftProjectPicker, ElicitationForm, isFormAction } from "@alwith/module-chat/conversation"
+import { ActionCard, ConnectionNotice, ConversationProvider, ConversationView, DraftProjectPicker, ElicitationForm, isFormAction } from "@alwith/module-chat/conversation"
+import { DesktopComposer } from "@alwith/module-chat/desktop"
 import { applyProvidersWhenIdle, codexSettingsBridge, serveSettingsBridge } from "@alwith/module-chat/settings"
 import { emitTo, listen } from "@tauri-apps/api/event"
 import { CollectionHostProvider, CollectionProvider } from "@alwith/module-chat/collections"
@@ -220,7 +221,8 @@ export function App() {
                   host={host}
                   header={header}
                   composer={
-                    <Composer
+                    <DesktopComposer
+                      client={client}
                       session={session}
                       inputHeader={
                         draft ? <DraftProjectPicker cwd={session.cwd} onChange={(cwd) => void changeProject(cwd)} /> : undefined

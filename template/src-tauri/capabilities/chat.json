@@ -1,12 +1,13 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "chat",
-  "description": "Model provider settings and skill documents (module-chat's native plugin) for the main and settings windows",
+  "description": "Model provider settings, skill documents and chat file attachments (module-chat's native plugin) for the main and settings windows",
   "windows": [
     "main",
     "settings"
   ],
   "permissions": [
-    "alwith-chat:default"
+    "alwith-chat:default",
+    "alwith-chat:files"
   ]
 }
