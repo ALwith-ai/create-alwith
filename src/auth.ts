@@ -77,5 +77,5 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
   await edit("scripts/stage.ts", source => source
     .replace(": extension for every app, auth with ALwith accounts.", ": extension.")
     .replace('for (const module of ["extension", "auth"])', 'for (const module of ["extension"])'));
-  await edit("vite.config.ts", source => source.replace(', "@alwith/module-auth"', "").replace(/^  build:.*\n/m, '  build: {rollupOptions: {input: {main: "index.html", settings: "settings.html"}}},\n'));
+  await edit("vite.config.ts", source => source.replace(', "@alwith/module-auth"', "").replace(/^  build:.*\n/m, '  build: {target: "esnext", minify: !debug, sourcemap: debug, rolldownOptions: {input: {main: "index.html", settings: "settings.html"}}},\n'));
 }

@@ -10,6 +10,7 @@ import {
   type LoginResponse
 } from "@alwith/module-auth"
 import { createTauriAuthRefresh } from "@alwith/module-auth/tauri"
+import { getIdentifier } from "@tauri-apps/api/app"
 import { emit, listen } from "@tauri-apps/api/event"
 import { fetch } from "@tauri-apps/plugin-http"
 import { arch, platform } from "@tauri-apps/plugin-os"
@@ -47,6 +48,18 @@ export const authClient = createAuthClient({
   platform,
   arch,
   getDeviceId: storage.tokenStorage.getDeviceId,
+  getRegistrationContext: async () => {
+    const channel = platform()
+    if (channel !== "macos" && channel !== "windows") throw new Error(`Unsupported registration platform: ${channel}`)
+    const [bundleId, deviceId] = await Promise.all([getIdentifier(), storage.tokenStorage.getDeviceId()])
+    return {
+      channel,
+      bundle_id: bundleId,
+      client_type: "DESKTOP",
+      client_name: `Tauri-${channel}-${arch()}`,
+      device_id: deviceId
+    }
+  },
   onLogoutError: () => console.warn("[auth] remote logout failed; clearing local login"),
   logInfo: () => {}
 })

@@ -2,11 +2,11 @@
   "items": [
     {
       "name": "login",
-      "sha256": "7631aafe4753ba85b78d5a4fd538f97e2fc5d1c00961b8719002780f12ff571e"
+      "sha256": "d52c03634aec11fc3d39a3c2743b49644e719c0628abb5e5196420641e776920"
     },
     {
       "name": "chat",
-      "sha256": "572f27f0ae71af02d63a19b9f1d5dbb440df2f89a194a596fbf4e086b317d518"
+      "sha256": "b554c5d3af84fe2942c3dfe2a081f5c444cdf62bb0f5f40a73e786b3d66505cc"
     },
     {
       "name": "sidebar",

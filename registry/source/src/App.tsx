@@ -1,4 +1,4 @@
-import { type DesktopScreen, DesktopHeader } from "@alwith/module-desktop-shell/react"
+import { type DesktopScreen, DesktopHeader, useDesktopZoom, ZoomFeedback } from "@alwith/module-desktop-shell/react"
 import {VibemonLounge} from "@alwith/module-auth/vibemon/react"
 import {initializeVibemonMain, updateMainVibemonSurface, requestVibemon} from "./auth/vibemon"
 import { openDesktopSettings } from "@alwith/module-desktop-shell/native"
@@ -69,8 +69,10 @@ function reboot(): Promise<string> {
 }
 
 export function App() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const connection = useClient((state) => state.connection)
+  // The page zoom (View → Zoom In / Zoom Out / Actual Size) reaches the shell for its native-sized chrome.
+  const { level: zoom } = useDesktopZoom()
   const connectionError = useClient((state) => state.connectionError)
   const [screen, setScreen] = useState<DesktopScreen>("main")
   const [region, setRegion] = useState("chat")
@@ -237,7 +239,9 @@ export function App() {
         screen={screen}
         onScreenChange={setScreen}
         onRegionChange={setRegion}
+        zoom={zoom}
       />
+      <ZoomFeedback language={i18n.language} onError={report} />
       </CollectionProvider>
       </CollectionHostProvider>
     </SessionListProvider>
