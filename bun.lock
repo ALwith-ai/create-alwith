@@ -5,12 +5,12 @@
     "": {
       "name": "create-alwith",
       "dependencies": {
-        "@alwith/module-desktop-shell": "^0.6.7",
+        "@alwith/module-desktop-shell": "^0.6.9",
       },
     },
   },
   "packages": {
-    "@alwith/module-desktop-shell": ["@alwith/module-desktop-shell@0.6.7", "", { "dependencies": { "@base-ui/react": "^1.9.0", "@nyssance/reui": "^2.8.1", "@nyssance/shadcn": "^4.23.4", "class-variance-authority": "^0.7.1", "cn": "^0.5.2", "lucide-react": "^1.70.0" }, "peerDependencies": { "@nyssance/atlas": "^0.1.11", "@tauri-apps/api": "^3.0.0-alpha.3", "react": "^19.3.1", "react-dom": "^19.3.1" }, "optionalPeers": ["@nyssance/atlas"] }, "sha512-rg/2sooIQI7KZknen6a99QsAuoMQWUM3XzcblcUyxPo15jEm3qgma7wssx14YGos3xQs7cZWSG0eIW1axZ+5Mg=="],
+    "@alwith/module-desktop-shell": ["@alwith/module-desktop-shell@0.6.9", "", { "dependencies": { "@base-ui/react": "^1.9.0", "@nyssance/reui": "^2.8.3", "@nyssance/shadcn": "^4.23.4", "class-variance-authority": "^0.7.1", "cn": "^0.5.2", "lucide-react": "^1.73.0" }, "peerDependencies": { "@nyssance/atlas": "^0.1.11", "@tauri-apps/api": "^3.0.0-alpha.3", "react": "^19.3.1", "react-dom": "^19.3.1" }, "optionalPeers": ["@nyssance/atlas"] }, "sha512-BVevrT/SDByIvUvvpfreEHkPhAn+LaEFnf2w+Wq3p4BtzU/UhNrTOLJDNFDSCv3umXH6g5cW+H1htThKlSz7mg=="],
 
     "@babel/runtime": ["@babel/runtime@8.1.2", "", {}, "sha512-Ay6HdEKZJAeGs6KKJ/ezCK5ssjFmkvUiR0TEGv/B1abyjLWrQ2RU+M507Ppk0NikhvVFhlEFC1/rHfCiYqSUcw=="],
 
@@ -228,7 +228,7 @@
 
     "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": { "loose-envify": "cli.js" } }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
 
-    "lucide-react": ["lucide-react@1.73.0", "", { "peerDependencies": { "@types/react": "*", "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react"] }, "sha512-fVOzGviL9mTfHenG1PbCfIceavyGlnpYNSYr+aGZHLRymAJ7DTP6KHuqt0uBkCKAoenr1UVkwSbDIYt2xIesEQ=="],
+    "lucide-react": ["lucide-react@1.74.0", "", { "peerDependencies": { "@types/react": "*", "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react"] }, "sha512-A1doIs/1fj1WnPbtIT7WRiM6Kvw5NUg+BtkoOh3Shpr4obwSDVt6WxCEcNH56EWprzuCoKle1OF0RqIkojwL1A=="],
 
     "mdast-util-to-hast": ["mdast-util-to-hast@13.2.2", "", { "dependencies": { "@types/hast": "^3.0.0", "@types/mdast": "^4.0.0", "@ungap/structured-clone": "^1.0.0", "devlop": "^1.0.0", "micromark-util-sanitize-uri": "^2.0.0", "trim-lines": "^3.0.0", "unist-util-position": "^5.0.0", "unist-util-visit": "^5.0.0", "vfile": "^6.0.0" } }, "sha512-l2pnmOuqs+SGLVpTVXnRLQu5v1AzvDe181404fbXzzqObVxrAnnVxapAP27pUwzLBL/ABIkgUhGlPVU7QSvIFg=="],
 
