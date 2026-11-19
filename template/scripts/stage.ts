@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-import { stageChatAdapter, stageEmojiData } from "@alwith/module-chat/stage"
+import { stageChatEngine, stageEmojiData } from "@alwith/module-chat/stage"
 // Stages the minimal sidecar set Tauri bundles: alwith-runtime, bun, codex, codex-code-mode-host,
-// plus the codex-acp-v2 adapter bundle as a resource. Everything comes from installed npm packages.
+// plus the codex-acp-v2 adapter bundle and its engine manifest as resources. Everything comes from installed npm packages.
 import { ensureIcons } from "@alwith/module-desktop-shell/build"
 import { stageNativeModule } from "@alwith/module-desktop-shell/stage"
 import { stageRuntime } from "@alwith/runtime/stage"
@@ -18,9 +18,9 @@ const licenses = join(resources, "licenses")
 mkdirSync(binaries, { recursive: true })
 mkdirSync(licenses, { recursive: true })
 
-const TARGETS: Record<string, { bun: string; codex: string; exe: string }> = {
-  "aarch64-apple-darwin": { bun: "@oven/bun-darwin-aarch64", codex: "darwin-arm64", exe: "" },
-  "x86_64-pc-windows-msvc": { bun: "@oven/bun-windows-x64-baseline", codex: "win32-x64", exe: ".exe" }
+const TARGETS: Record<string, { bun: string; exe: string }> = {
+  "aarch64-apple-darwin": { bun: "@oven/bun-darwin-aarch64", exe: "" },
+  "x86_64-pc-windows-msvc": { bun: "@oven/bun-windows-x64-baseline", exe: ".exe" }
 }
 const host = (await $`rustc -vV`.text()).match(/^host: (.+)$/m)?.[1].trim()
 const triple = process.argv[2] ?? process.env.TAURI_ENV_TARGET_TRIPLE ?? host
@@ -55,23 +55,17 @@ const bun = place(join(root, "node_modules", target.bun, "bin", `bun${target.exe
 await sign(bun, true)
 console.log(`bun -> ${bun}`)
 
-// 3. Codex CLI and its sibling helper.
-const codexPackage = join(root, `node_modules/@openai/codex-${target.codex}`)
-const windowsHelpers = target.exe ? ["codex-windows-sandbox-setup", "codex-command-runner"] : []
-for (const name of ["codex", "codex-code-mode-host", ...windowsHelpers]) {
-  const directory = windowsHelpers.includes(name) ? "codex-resources" : "bin"
-  const staged = place(join(codexPackage, "vendor", triple, directory, `${name}${target.exe}`), name)
+// 3. The chat engine, whole from @alwith/module-chat: the ACP adapter, the Codex build it was generated
+// against (with its sibling helpers) and engine.json, which says how the Runtime starts them.
+const engine = stageChatEngine({ triple, adapter: join(resources, "adapter"), binaries, licenses })
+for (const sidecar of engine.codex.sidecars) {
   // Match ALwith U: preserve the vendor-signed Codex executables byte-for-byte.
-  if (mac) await $`codesign --verify --strict ${staged}`.quiet()
-  console.log(`${name} -> ${staged}`)
+  if (mac) await $`codesign --verify --strict ${sidecar.path}`.quiet()
+  console.log(`${sidecar.name} ${engine.codex.version} -> ${sidecar.path}`)
 }
+console.log(`codex-acp-v2 ${engine.adapter.version} -> ${engine.adapter.entry}`)
 
-// 4. The ACP adapter, byte-for-byte from the published package.
-const adapterDirectory = join(resources, "adapter")
-stageChatAdapter(adapterDirectory, licenses)
-console.log(`codex-acp-v2 -> ${join(adapterDirectory, "codex-acp-v2.mjs")}`)
-
-// 4b. Emoji data for the 收藏 emoji picker, served from public/emojibase so the picker works offline.
+// 4. Emoji data for the 收藏 emoji picker, served from public/emojibase so the picker works offline.
 const emojiDirectory = join(root, "public/emojibase")
 stageEmojiData(emojiDirectory)
 console.log(`emojibase -> ${emojiDirectory}`)

@@ -40,38 +40,15 @@ dependencies = [
 
 [[package]]
 name = "alwith-api"
-version = "0.6.0"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "afc8f46892a3e947ca9c46d92a2cd20c3b15604e6ddf2b1bead8e66cdc23738a"
+checksum = "4e34aa664e9942b2b8557521ab6481f0290638deb042f3a41ee80a1717983ab0"
 dependencies = [
  "log",
  "serde",
  "serde_json",
  "specta",
  "specta-typescript",
- "tokio",
-]
-
-[[package]]
-name = "alwith-app"
-version = "0.1.0"
-dependencies = [
- "alwith-api",
- "alwith-chat",
- "alwith-desktop-shell",
- "alwith-extension",
- "alwith-store",
- "log",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-hasgard",
- "tauri-plugin-log",
- "tauri-plugin-opener",
- "tauri-plugin-updater",
- "tauri-runtime-wry",
  "tokio",
 ]
 
@@ -155,9 +132,9 @@ dependencies = [
 
 [[package]]
 name = "alwith-native-client"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4bc1baa4e2a7e3ee14bae81db0df0fa5c13956208f7169957acd41805b0b3fa6"
+checksum = "ed26001849d46b8e0d608cd81aaf84e30135a09a6bdcea15fade55b3554a8c2f"
 dependencies = [
  "libloading",
  "serde",
@@ -4111,9 +4088,9 @@ dependencies = [
 
 [[package]]
 name = "specta"
-version = "2.0.0-rc.27"
+version = "2.0.0-rc.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81633014710ece1c7e8ac99e1bc9ad8d4339a2ccbae89ca2aa1095d4262c86b8"
+checksum = "3fa60a95f1bed059a9e9b1f4052dfa8fee47813c429223c8590b338f719ac12e"
 dependencies = [
  "chrono",
  "paste",
@@ -4124,9 +4101,9 @@ dependencies = [
 
 [[package]]
 name = "specta-macros"
-version = "2.0.0-rc.27"
+version = "2.0.0-rc.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fe882a75f48f76ac091ca2c5aaad7abd4dfdedf649c08e865bb0d62b5a2cb92"
+checksum = "7eeb2926ce0ef69a996fb8ad805c39936d47b6f02b327eca79cb207645ac8686"
 dependencies = [
  "Inflector",
  "proc-macro2",
@@ -4136,19 +4113,18 @@ dependencies = [
 
 [[package]]
 name = "specta-serde"
-version = "0.0.14"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a75ee5142f81ca1e0046b16c09d0f5a36c75884802da3f0281f78bfe221e559"
+checksum = "69fbb7f8846160cc2924352f5a3b199281742ea335b6b4328d886a44d398e417"
 dependencies = [
  "specta",
- "specta-macros",
 ]
 
 [[package]]
 name = "specta-typescript"
-version = "0.0.14"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a113bb506b00463cfb54c5819e55ec081bc7d52ef463d7726181e9073cd473a"
+checksum = "b96519dc9b060d66e50b55ab10fb550bbf56c7576b9c9cca467d580a53cd473d"
 dependencies = [
  "specta",
 ]
@@ -4368,9 +4344,9 @@ checksum = "61c41af27dd6d1e27b1b16b489db798443478cef1f06a660c96db617ba5de3b1"
 
 [[package]]
 name = "tauri"
-version = "3.0.0-alpha.5"
+version = "3.0.0-alpha.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5a9b34042b264a9ecd402aa8aa3e825a4c95e77097a45b0737e02d86509c43b"
+checksum = "4b0cad7bd420aa41bdf7beab9a95e02d83c4cab1cb6f7b94fe4fd1e0c605feaa"
 dependencies = [
  "anyhow",
  "bytes",
@@ -4646,9 +4622,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime"
-version = "3.0.0-alpha.4"
+version = "3.0.0-alpha.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37d33186aff00f285828a7d1a63ac040c2384e6b63a3f1c1d2c4aac492cc0a10"
+checksum = "ade3281587f58a4878192946ae2007ce03cb6d208d082e1350c5ec95554596f3"
 dependencies = [
  "cookie",
  "dpi",
@@ -4667,9 +4643,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime-wry"
-version = "3.0.0-alpha.5"
+version = "3.0.0-alpha.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7afdc42aba986b11cd2c9b592c33c688bf71a9cd0db0d5eb1a97addfdefc287"
+checksum = "2f9bf76d9a937d43f15b2f048f5e5bed39cf71f1be21114a303ad4c9f2f0f28f"
 dependencies = [
  "gtk",
  "http",
@@ -4744,9 +4720,9 @@ dependencies = [
 
 [[package]]
 name = "tauri3-specta"
-version = "0.1.0-alpha.4"
+version = "0.1.0-alpha.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "158cb5aa9f22760ca20442655164d5c1128529010899dc873c7f05d8dbe57d34"
+checksum = "aac2128a43f52f0688a0c411507673b21bd7e83a05622a9fadf4b89574ae6f1c"
 dependencies = [
  "heck 0.5.0",
  "serde",
@@ -5236,6 +5212,29 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+
+[[package]]
+name = "violet-buddy"
+version = "0.1.0"
+dependencies = [
+ "alwith-api",
+ "alwith-chat",
+ "alwith-desktop-shell",
+ "alwith-extension",
+ "alwith-store",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-hasgard",
+ "tauri-plugin-log",
+ "tauri-plugin-opener",
+ "tauri-plugin-updater",
+ "tauri-runtime-wry",
+ "tokio",
+]
 
 [[package]]
 name = "vswhom"

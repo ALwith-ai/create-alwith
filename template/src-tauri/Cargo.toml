@@ -20,7 +20,7 @@ tauri-build = { version = "3.0.0-alpha.4", features = [] }
 
 [dependencies]
 alwith-desktop-shell = "0.6"
-alwith-api = "0.6"
+alwith-api = "0.6.4"
 alwith-chat = "0.6"
 alwith-store = "0.6"
 alwith-auth = "0.6"

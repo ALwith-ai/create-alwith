@@ -69,19 +69,20 @@ fn resources_dir(app: &AppHandle) -> Result<PathBuf, String> {
     }
 }
 
-/// The engines table the Runtime launches agents from: Codex = bundled Bun running the ACP adapter,
-/// which spawns the bundled Codex CLI.
+/// The engines table the Runtime launches agents from. The chat engine was staged with its own
+/// manifest (`engine.json`): how it starts belongs to the engine, the app only supplies the paths.
 fn engines_table(app: &AppHandle) -> Result<String, String> {
-    let adapter = resources_dir(app)?.join("adapter/codex-acp-v2.mjs");
-    if !adapter.is_file() {
-        return Err(format!("ACP adapter missing at {}", adapter.display()));
-    }
-    Ok(json!({"codex": {
-        "command": sidecar_path("bun")?,
-        "args": ["--no-install", adapter],
-        "env": {"CODEX_PATH": sidecar_path("codex")?}
-    }})
-    .to_string())
+    let adapter = resources_dir(app)?.join("adapter");
+    let engine = alwith_api::engine_from_manifest(
+        &adapter.join("engine.json"),
+        &[
+            ("bun", &sidecar_path("bun")?),
+            ("adapter", &adapter.join("codex-acp-v2.mjs")),
+            ("codex", &sidecar_path("codex")?),
+        ],
+    )
+    .map_err(|error| error.to_string())?;
+    Ok(json!({ "codex": engine }).to_string())
 }
 
 #[tauri::command]

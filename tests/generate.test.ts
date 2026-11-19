@@ -356,7 +356,9 @@ for (const auth of ["alwith", "none"] as const) {
     const directory = await destination();
     await generateProject({ ...options, directory, auth });
     const pkg = await Bun.file(join(directory, "package.json")).json();
-    expect(pkg.optionalDependencies["@openai/codex-win32-x64"]).toBe("npm:@openai/codex@win32-x64");
+    // Codex comes with the chat engine of @alwith/module-chat; the application never declares it.
+    for (const group of [pkg.dependencies, pkg.devDependencies, pkg.optionalDependencies])
+      expect(Object.keys(group).filter((name) => name.startsWith("@openai/codex"))).toEqual([]);
     for (const group of [pkg.dependencies, pkg.devDependencies, pkg.optionalDependencies]) {
       // Ranges, never exact pins: npm declarations use three-part caret ranges such as ^0.6.0.
       for (const version of Object.values(group)) expect(version).not.toMatch(/^\d+\.\d+\.\d+$/);
@@ -365,10 +367,11 @@ for (const auth of ["alwith", "none"] as const) {
     expect(await Bun.file(join(directory, "src-tauri/Cargo.toml")).text()).toContain('tauri-plugin-hasgard = { version = "0.6", optional = true }');
     const windows = await Bun.file(join(directory, "src-tauri/tauri.windows.conf.json")).json();
     expect(windows.bundle.targets).toEqual(["nsis"]);
+    // The chat engine stages the Windows sandbox helpers; the bundle still has to declare them.
+    expect(await Bun.file(join(directory, "scripts/stage.ts")).text()).toContain("stageChatEngine({ triple");
+    expect(await Bun.file(join(directory, "scripts/check-codex-signatures.ts")).text()).toContain("codexArtifact(triple)");
     for (const helper of ["codex-windows-sandbox-setup", "codex-command-runner"]) {
       expect(windows.bundle.externalBin).toContain(`binaries/${helper}`);
-      expect(await Bun.file(join(directory, "scripts/stage.ts")).text()).toContain(helper);
-      expect(await Bun.file(join(directory, "scripts/check-codex-signatures.ts")).text()).toContain(helper);
     }
   });
 }
