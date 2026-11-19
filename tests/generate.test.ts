@@ -364,7 +364,7 @@ for (const auth of ["alwith", "none"] as const) {
       for (const version of Object.values(group)) expect(version).not.toMatch(/^\d+\.\d+\.\d+$/);
     }
     expect(pkg.optionalDependencies["@oven/bun-windows-x64-baseline"]).toBe(pkg.optionalDependencies["@oven/bun-darwin-aarch64"]);
-    expect(await Bun.file(join(directory, "src-tauri/Cargo.toml")).text()).toContain('tauri-plugin-hasgard = { version = "0.6", optional = true }');
+    expect(await Bun.file(join(directory, "src-tauri/Cargo.toml")).text()).toContain('tauri-plugin-hasgard = { version = "0.7", optional = true }');
     const windows = await Bun.file(join(directory, "src-tauri/tauri.windows.conf.json")).json();
     expect(windows.bundle.targets).toEqual(["nsis"]);
     // The chat engine stages the Windows sandbox helpers; the bundle still has to declare them.
