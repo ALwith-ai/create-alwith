@@ -25,7 +25,7 @@
     "bun": ">=1.4.4"
   },
   "scripts": {
-    "test": "bun test ./tests",
+    "test": "bun test --parallel ./tests",
     "build:registry": "bun scripts/build-registry.ts",
     "check:source": "bun scripts/check-source.ts"
   },
