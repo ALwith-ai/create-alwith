@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "violet-buddy",
+      "name": "alwith-app",
       "dependencies": {
         "@agentclientprotocol/sdk": "^2.8.0",
         "@alwith/api": "^0.6.4",
