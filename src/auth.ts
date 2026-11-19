@@ -7,6 +7,13 @@ export function authMode(value: unknown): AuthMode {
   return value;
 }
 
+/** A removal that no longer matches the template would leave dead code behind; fail generation instead. */
+function strip(source: string, pattern: string | RegExp, replacement = ""): string {
+  const result = source.replace(pattern, replacement);
+  if (result === source) throw new Error(`Account removal no longer matches the template: ${pattern}`);
+  return result;
+}
+
 /** Remove account wiring at generation time, not at runtime behind a hidden login. */
 export async function configureAuth(root: string, mode: AuthMode): Promise<void> {
   if (mode === "alwith") return;
@@ -26,6 +33,16 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
     .replace(' onVibemon={() => { setLeadingPage("vibemon"); setScreen("leading") }}', "")
     .replace(/ onShowVibemon=\{\(\) => \{ void requestVibemon\("open-vibemon"\)[^\n]*?\.catch\(report\) \}\}/, "")
     .replace(/^        trailing=\{vibemonReady && <VibemonLounge.*\n/m, ""));
+  // What only the removed account code used: the region state, the account menu and its language list.
+  await edit("src/App.tsx", source => strip(source, 'const [region, setRegion] = useState("chat")', 'const [, setRegion] = useState("chat")'));
+  await edit("src/layout/navigation.tsx", source => [
+    /^import appIcon from "@\/generated\/app-icon"\n/m,
+    /^  AccountLanguageMenu,\n/m,
+    /^  AccountMenu,\n/m,
+    /^  AccountMenuGroup,\n/m,
+    /^  MENU_HIGHLIGHT,\n/m,
+    /^import \{ changeLanguage, LANGUAGES \} from "\.\.\/i18n"\n/m,
+  ].reduce((text: string, pattern) => strip(text, pattern), strip(source, "const { t, i18n } = useTranslation()", "const { t } = useTranslation()")));
   await edit("src/layout/leading.tsx", source => source
     .replace(/^import \{ VibemonCenter \}.*\n/m, "")
     .replace("ArchiveIcon, LayoutGridIcon, PawPrintIcon", "ArchiveIcon, LayoutGridIcon")
@@ -54,6 +71,8 @@ export async function configureAuth(root: string, mode: AuthMode): Promise<void>
     .replace("ContrastIcon, CpuIcon, InfoIcon, LogOutIcon, SlidersHorizontalIcon, UserIcon", "ContrastIcon, CpuIcon, InfoIcon, SlidersHorizontalIcon")
     .replace(/^    \{ id: "account",.*\n/m, "")
     .replace(/      case "account":\n        return user \?[\s\S]*?\) : null\n/, ""));
+  // Only the sign-out row used the button.
+  await edit("src/settings/page.tsx", source => strip(source, /^import \{ Button \} from "@\/components\/ui\/button"\n/m));
   await edit("src/layout/navigation.tsx", source => source
     .replace(/^import \{ logoutPlatform, usePlatformAuth \}.*\n/m, "")
     .replace(/^  const user = usePlatformAuth.*\n/m, "")
