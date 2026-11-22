@@ -24,6 +24,7 @@ Fabric is optional: `bun run app-config` followed by `bun run dev:tauri` or `bun
 
 Edit `alwith.app.json` to change your app's branding. Edit the generated pages directly to customize the interface.
 
+<!-- alwith:updates:begin -->
 ## Releases and auto update
 
 When `alwith.app.json` has an `updates` section (`bun create alwith --github owner/repo` writes it), `.github/workflows/release.yml` turns every pushed `v<version>` tag into a GitHub Release of this repository with the signed, notarized macOS DMG, the updater archive, its signature and `latest.json`. The release is created only after every asset is ready, so the updater endpoint `https://github.com/owner/repo/releases/latest/download/latest.json` is valid as soon as the release exists. Installed copies check from Settings and download, verify and relaunch from there.
@@ -41,6 +42,7 @@ Set these repository secrets before tagging:
 
 The tag must equal `v` plus the `version` in `alwith.app.json`; bump it and run `bun run app-config` first. The public key stays in `updates.pubkey`; generating a new key means every installed copy must reinstall once. To add updates to an existing app, create a key with `bun run tauri signer generate -w ~/.tauri/<name>.key`, put the `.pub` file's contents and your `owner/repo` into `updates`, and rerun `bun run app-config`.
 
+<!-- alwith:updates:end -->
 ## Application tests
 
 Run `bun run test` for isolated application wiring tests, `bun run verify` for frontend gates, and `bun run verify:native` (also `fab check`) for staging, vendor signatures and native compilation. Tests are included in generated projects. See [testing and acceptance](docs/testing.md) for Hasgard scenarios, enabled-module checks and separately authorized live acceptance.

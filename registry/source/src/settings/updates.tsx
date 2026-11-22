@@ -4,6 +4,14 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import app from "../../alwith.app.json"
+import i18n from "../i18n"
+
+// The row's own strings: they come and go with auto update, a choice made when the application is created.
+const STRINGS = {
+  en: { title: "Updates", version: "Version {{version}}", checking: "Checking for updates…", upToDate: "Up to date ({{version}})", downloading: "Downloading {{version}}…", available: "Version {{version}} is ready to install", installing: "Installing {{version}}…", check: "Check for updates", install: "Relaunch to update" },
+  "zh-CN": { title: "更新", version: "版本 {{version}}", checking: "正在检查更新…", upToDate: "已是最新（{{version}}）", downloading: "正在下载 {{version}}…", available: "版本 {{version}} 已可安装", installing: "正在安装 {{version}}…", check: "检查更新", install: "重新启动以更新" }
+}
+for (const [language, updates] of Object.entries(STRINGS)) i18n.addResourceBundle(language, "translation", { updates }, true, true)
 
 /** The shell's updater: it checks and downloads in the background; this row shows where it stands, checks now, or relaunches. */
 export function UpdatesRow() {

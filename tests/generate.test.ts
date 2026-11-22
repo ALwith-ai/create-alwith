@@ -63,7 +63,9 @@ test("expands a complete chat preset offline and derives all brand configuration
   );
   expect(capabilities.permissions).toContain("alwith-auth:vibemon");
   const cargo = await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8");
-  for (const plugin of ["alwith-auth", "alwith-chat", "alwith-store", "alwith-extension", "alwith-desktop-shell"]) expect(cargo).toMatch(new RegExp(`^${plugin} = "\\d+\\.\\d+"$`, "m"));
+  for (const plugin of ["alwith-auth", "alwith-chat", "alwith-store", "alwith-extension"]) expect(cargo).toMatch(new RegExp(`^${plugin} = "\\d+\\.\\d+"$`, "m"));
+  // Created without auto update: the shell is built without its updater.
+  expect(cargo).toMatch(/^alwith-desktop-shell = \{ version = "\d+\.\d+", default-features = false \}$/m);
   expect(cargo).not.toContain("node_modules");
   expect(await readFile(join(directory, "scripts/stage.ts"), "utf8")).toContain('for (const module of ["extension", "auth"])');
   expect(
@@ -327,6 +329,10 @@ test("updates write a key pair outside the project and configure the GitHub rele
   expect(await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8")).toContain("tauri_plugin_updater::Builder::new().build()");
   expect(await readFile(join(directory, ".github/workflows/release.yml"), "utf8")).toContain("release-manifest.ts collect");
   expect(await readFile(join(directory, "src/settings/updates.tsx"), "utf8")).toContain("useDesktopUpdater");
+  expect(await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8")).toContain("tauri-plugin-updater");
+  expect(await readFile(join(directory, "src/settings/page.tsx"), "utf8")).toContain("<UpdatesRow />");
+  expect(await readFile(join(directory, "README.md"), "utf8")).toContain("## Releases and auto update");
+  for (const path of ["src-tauri/src/lib.rs", "src-tauri/Cargo.toml", "src/settings/page.tsx", "README.md"]) expect(await readFile(join(directory, path), "utf8")).not.toContain("alwith:updates");
   expect(JSON.parse(await readFile(join(directory, ".alwith/template.json"), "utf8")).updates).toEqual({ github: "example/my-buddy" });
   // An existing key is never overwritten, and nothing is generated when the input is refused.
   const again = join(await destination(), "again");
@@ -348,7 +354,16 @@ test("without updates the generated app has no updater configuration", async () 
   expect(tauri.plugins).toBeUndefined();
   expect(tauri.bundle.createUpdaterArtifacts).toBeUndefined();
   expect(JSON.parse(await readFile(join(directory, "alwith.app.json"), "utf8")).updates).toBeUndefined();
-  expect(await readFile(join(directory, "src/settings/page.tsx"), "utf8")).toContain('"updates" in app && <UpdatesRow />');
+  // Auto update is a generation choice: no updater plugin, dependency, settings row or release workflow remains.
+  expect(await readFile(join(directory, "src-tauri/src/lib.rs"), "utf8")).not.toContain("updater");
+  expect(await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8")).not.toContain("tauri-plugin-updater");
+  expect(await readFile(join(directory, "src-tauri/Cargo.lock"), "utf8")).not.toContain("tauri-plugin-updater");
+  expect(await readFile(join(directory, "src-tauri/Cargo.toml"), "utf8")).toContain('alwith-desktop-shell = { version = "0.6", default-features = false }');
+  expect(await readFile(join(directory, "src/settings/page.tsx"), "utf8")).not.toContain("UpdatesRow");
+  expect(await readFile(join(directory, "README.md"), "utf8")).not.toContain("auto update");
+  expect(await readFile(join(directory, "src/i18n.ts"), "utf8")).not.toContain("updates");
+  for (const path of ["src-tauri/src/lib.rs", "src-tauri/Cargo.toml", "src/settings/page.tsx", "README.md"]) expect(await readFile(join(directory, path), "utf8")).not.toContain("alwith:updates");
+  for (const path of ["src/settings/updates.tsx", ".github/workflows/release.yml", "scripts/release-manifest.ts"]) expect(await Bun.file(join(directory, path)).exists()).toBe(false);
 });
 
 for (const auth of ["alwith", "none"] as const) {

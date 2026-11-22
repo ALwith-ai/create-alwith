@@ -6,7 +6,7 @@
     },
     {
       "name": "chat",
-      "sha256": "201fd7fc50400598f516f8f63b84c5d0ca9dc1830388863b536bd7468d391ff9"
+      "sha256": "992ee4aebe20e2ca11f478a56e3345982ce014d3442f929c756e874ddb34c6a3"
     },
     {
       "name": "sidebar",
@@ -18,7 +18,7 @@
     },
     {
       "name": "settings",
-      "sha256": "604aa5b13d8a286c1100f0311602aa07beb46cac234c58c5c753e8b6ad20d9bd"
+      "sha256": "1496a668567e2d7377546d25311b6ae426cd35b7bb9f29b063dba7995a7c99af"
     }
   ]
 }

@@ -8,6 +8,7 @@
   ],
   "permissions": [
     "alwith-chat:default",
-    "alwith-chat:files"
+    "alwith-chat:files",
+    "dialog:allow-open"
   ]
 }

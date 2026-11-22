@@ -28,13 +28,10 @@ pub fn run() {
             development_directory: native_development_directory(),
             vibemon: Some(alwith_auth::VibemonOwner::new(vibemon_owner)),
         }));
-    // Signed updates from GitHub Releases exist only when alwith.app.json declares `updates`; the updater
-    // plugin rejects a configuration without a public key, so it is registered only then.
-    let builder = if alwith_desktop_shell::updates_configured(context.config()) {
-        builder.plugin(tauri_plugin_updater::Builder::new().build())
-    } else {
-        builder
-    };
+    // alwith:updates:begin
+    // Signed updates from GitHub Releases, as `updates` in alwith.app.json declares them.
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
+    // alwith:updates:end
     #[cfg(feature = "hasgard-testing")]
     let builder = builder.plugin(tauri_plugin_hasgard::init());
     builder

@@ -13,7 +13,7 @@ test("new brand identities preserve the frozen dependency closure", async () => 
       expect(bun).toContain(`"name": "${name}"`);
       const cargo = await readFile(join(output, "src-tauri/Cargo.lock"), "utf8");
       const records = cargo.split(/(?=^\[\[package\]\])/m).slice(1);
-      const before = (await readFile(new URL("../template/src-tauri/Cargo.lock", import.meta.url), "utf8")).split(/(?=^\[\[package\]\])/m).slice(1);
+      const before = (await readFile(new URL("../locks/alwith-no-updates/src-tauri/Cargo.lock", import.meta.url), "utf8")).split(/(?=^\[\[package\]\])/m).slice(1);
       expect(records.filter(block => block.includes(`\nname = "${name}"\n`))).toHaveLength(1);
       expect(records.filter(block => !block.includes(`\nname = "${name}"\n`))).toEqual(before.filter(block => !block.includes('\nname = "alwith-app"\n')));
     }

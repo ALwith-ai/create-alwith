@@ -25,7 +25,9 @@ export default defineConfig({
       "diff2html",
       "diff2html/lib/types",
       "use-sync-external-store/shim",
-      "use-sync-external-store/shim/with-selector"
+      "use-sync-external-store/shim/with-selector",
+      // module-chat loads Mermaid only when a conversation shows a diagram.
+      "mermaid"
     ]
   },
   server: {

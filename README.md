@@ -16,7 +16,7 @@ bun run app-config
 bun run dev:tauri
 ```
 
-Add `--github owner/repo` for signed auto update through that repository's GitHub Releases: the generator creates a Tauri updater key pair, writes the private key to `~/.tauri/<name>.key` (never into the project; `--key-password` protects it, `--pubkey` reuses an existing public key instead) and records the repository and public key under `updates` in `alwith.app.json`. The generated `.github/workflows/release.yml` publishes a release of that repository from every `v<version>` tag; the generated README lists the secrets it needs.
+Add `--github owner/repo` for signed auto update through that repository's GitHub Releases: the generator creates a Tauri updater key pair, writes the private key to `~/.tauri/<name>.key` (never into the project; `--key-password` protects it, `--pubkey` reuses an existing public key instead) and records the repository and public key under `updates` in `alwith.app.json`. The generated `.github/workflows/release.yml` publishes a release of that repository from every `v<version>` tag; the generated README lists the secrets it needs. Auto update is a generation choice, like account integration: without `--github` the application has no updater plugin, settings row or release workflow, and the desktop shell is built without its `updates` feature.
 
 Choose `--auth alwith` for ALwith account integration, or `--auth none` for bare chat without ALwith login and its native dependencies. Model provider authentication is separate in both modes. The choice is recorded by `modules` in `alwith.app.json`; account integration is a generation choice, not a runtime login bypass.
 
@@ -42,7 +42,7 @@ Bun/Tauri workflow and is optional; each generated project includes its own READ
 
 ## Development
 
-Use Bun 1.4.4. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun run test` exercise offline project generation. The test command is scoped to generator tests; generated applications receive their own `tests/`, `bun run test`, `bun run verify` and `bun run verify:native`. See `template/docs/testing.md` for test boundaries and desktop/live acceptance.
+Use Bun 1.4.5. `bun run check:source` validates the source distribution and registry snapshots without installing platform dependencies. `bun install` and `bun run test` exercise offline project generation. The test command is scoped to generator tests; generated applications receive their own `tests/`, `bun run test`, `bun run verify` and `bun run verify:native`. See `template/docs/testing.md` for test boundaries and desktop/live acceptance.
 
 `registry.json` defines the default login, chat, sidebar, shell and settings blocks. `bun run build:registry` uses shadcn 4.22.1 and records SHA-256 hashes. The generator uses those same immutable snapshots. Upgrade or replace pages through the standard shadcn workflow.
 

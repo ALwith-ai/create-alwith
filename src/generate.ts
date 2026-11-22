@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { configureProject, safePath, validateConfig, type AppConfig } from "./config";
 import { authMode, configureAuth, type AuthMode } from "./auth";
 import { configureLockfiles } from "./lockfiles";
-import { generateUpdaterKeys, githubRepository, updaterKeyDirectory, writeUpdaterKeys } from "./updates";
+import { configureUpdates, generateUpdaterKeys, githubRepository, updaterKeyDirectory, writeUpdaterKeys } from "./updates";
 import { GenerateError, generationError } from "./errors";
 export { GenerateError, type GenerateErrorCode } from "./errors";
 export { generateUpdaterKeys, githubRepository, updaterKeyDirectory, writeUpdaterKeys, type UpdaterKeys } from "./updates";
@@ -116,6 +116,7 @@ export async function generateProjectWithResult(options: GenerateOptions): Promi
       await cp(join(packageRoot, "locks/none/bun.lock"), join(output, "bun.lock"));
       await cp(join(packageRoot, "locks/none/src-tauri/Cargo.lock"), join(output, "src-tauri/Cargo.lock"));
     }
+    await configureUpdates(output, updates !== undefined, auth);
     await writeFile(join(output, "alwith.app.json"), JSON.stringify({$schema: "./alwith.app.schema.json", ...config}, null, 2)+"\n");
     progress("configure");
     // The private key lives outside the project (never committed); only its public half enters alwith.app.json.

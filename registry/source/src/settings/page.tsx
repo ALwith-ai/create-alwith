@@ -29,8 +29,9 @@ import { client } from "../client"
 import { providers } from "../providers"
 import { settingsBridge } from "../settings-bridge"
 import { changeLanguage, LANGUAGES } from "../i18n"
+// alwith:updates:begin
 import { UpdatesRow } from "./updates"
-import app from "../../alwith.app.json"
+// alwith:updates:end
 import "@alwith/module-desktop-shell/settings.css"
 
 /** Default settings window: U's sections from the shell; application authors may replace this whole page. */
@@ -89,7 +90,9 @@ export function SettingsPage() {
       case "about":
         return (
           <AboutSection language={i18n.language}>
-            {"updates" in app && <UpdatesRow />}
+            {/* alwith:updates:begin */}
+            <UpdatesRow />
+            {/* alwith:updates:end */}
             <SettingRow title={t("licensesTitle")} desc={t("licenses")} />
           </AboutSection>
         )

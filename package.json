@@ -22,7 +22,7 @@
     "bun.lock"
   ],
   "engines": {
-    "bun": ">=1.4.4"
+    "bun": ">=1.4.5"
   },
   "scripts": {
     "test": "bun test --parallel ./tests",
@@ -33,7 +33,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@alwith/module-desktop-shell": "^0.6.10"
+    "@alwith/module-desktop-shell": "^0.6.11"
   },
   "license": "AGPL-3.0-only",
   "description": "Generate a standalone ALwith WorkBuddy with editable page blocks.",

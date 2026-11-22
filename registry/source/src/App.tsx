@@ -8,6 +8,7 @@ import { ActionCard, ConnectionNotice, ConversationProvider, ConversationView, D
 import { DesktopComposer } from "@alwith/module-chat/desktop"
 import { applyProvidersWhenIdle, codexSettingsBridge, serveSettingsBridge } from "@alwith/module-chat/settings"
 import { emitTo, listen } from "@tauri-apps/api/event"
+import { open as openFileDialog } from "@tauri-apps/plugin-dialog"
 import { CollectionHostProvider, CollectionProvider } from "@alwith/module-chat/collections"
 import { type SessionSummary, SessionListProvider } from "@alwith/module-chat/session-list"
 import { useCallback, useEffect, useState } from "react"
@@ -21,6 +22,9 @@ import { providers } from "./providers"
 import { LeadingScreen, type LeadingPage } from "./layout/leading"
 import { Navigation } from "./layout/navigation"
 import { Shell } from "./layout/shell"
+
+/** Attachments are picked as native paths, so local files reach Codex without being copied through the webview, as in U. */
+const pickFilePaths = async (): Promise<string[]> => (await openFileDialog({ multiple: true })) ?? []
 
 /** The session shown when the webview comes back; the Runtime keeps it alive across reloads. */
 const SESSION_KEY = `${app.identifier}.session`
@@ -223,6 +227,9 @@ export function App() {
                   composer={
                     <DesktopComposer
                       client={client}
+                      providers={providers}
+                      allowDirectory
+                      pickFilePaths={pickFilePaths}
                       session={session}
                       inputHeader={
                         draft ? <DraftProjectPicker cwd={session.cwd} onChange={(cwd) => void changeProject(cwd)} /> : undefined
