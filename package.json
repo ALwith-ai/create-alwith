@@ -33,7 +33,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@alwith/module-desktop-shell": "^0.6.11"
+    "@alwith/module-desktop-shell": "^0.6.14"
   },
   "license": "AGPL-3.0-only",
   "description": "Generate a standalone ALwith WorkBuddy with editable page blocks.",
